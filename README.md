@@ -7,6 +7,9 @@ live previews rendered from the app's real markup and stylesheet.
 [![CI](https://github.com/iintore/Open-Figment-Design-System/actions/workflows/ci.yml/badge.svg)](https://github.com/iintore/Open-Figment-Design-System/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+**Docs:** [open-figment-design-system.vercel.app](https://open-figment-design-system.vercel.app)  
+**App:** [open-figment.vercel.app](https://open-figment.vercel.app)
+
 ## What's inside
 
 - **Foundations:** colour (light and dark), typography, spacing and size, radius, elevation,
