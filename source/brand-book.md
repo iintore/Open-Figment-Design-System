@@ -73,7 +73,17 @@ The editor is a fixed frame around the canvas: TabBar on top, NavigationRail and
 
 ## Iconography
 
-The icon set is the app's own outline set (`src/ui/icons.tsx`): 24 × 24 viewBox, 1px strokes with round caps and joins, glyphs drawn within roughly 5.5–18.5 so they sit centred in 24px buttons. Icons inherit `currentColor`, so they take `color-icon`, `color-icon-secondary` or `color-text-brand` from their control. The SVG files under **Assets → Icons** are exported with a `#1e1e1e` ink for use outside the app. Filled glyphs are used only for the move cursor, the filled star and small dots. Never mix in another icon family.
+The icon set is the app's own outline set (`src/ui/icons.tsx`), drawn to one spec:
+
+- **Grid:** 24 × 24 viewBox, glyphs centred on (12, 12).
+- **Stroke:** 1px, centred, round caps and joins. Strokes never scale: an icon drawn smaller compensates its stroke width.
+- **Live area:** most glyphs fill 6–18 (12px); circles and containers 5–19; tool glyphs such as frame and the cursor 4.5–19.5.
+- **Corners:** 1px radius on small rectangles, 1.25–1.5px on containers.
+- **Alignment and layout:** 2px solid bars against a muted guide line.
+- **Muted layer:** guides and the back shape of boolean icons use 35% opacity of the same colour, so they follow the theme.
+- **Fills:** only for the dots (1.5px radius, 6px apart), the filled star, the mask half and the intersect result.
+
+Icons inherit `currentColor`, so they take `color-icon`, `color-icon-secondary` or `color-text-brand` from their control. The SVG files under **Assets → Icons** are exported with a `#1e1e1e` ink for use outside the app. Never mix in another icon family.
 
 The logo is the monkey mark (`Monkey` in `src/ui/Monkey.tsx`): a flat drawing on a `#FFC531` rounded tile, with no gradients. Use the tiled version as the app icon and in the rail; use the bare version on coloured or photographic grounds.
 

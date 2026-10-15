@@ -210,7 +210,7 @@ F = [
     ('radius', 'Radius', 'Five pixels for controls, thirteen for floating surfaces, round for people.', section(vf, 'Radius', 3), 'radius'),
     ('elevation', 'Elevation', 'Hairlines separate panels; only floating surfaces cast shadows.', section(vf, 'Borders, elevation and layering', 3), 'elevation'),
     ('states', 'States & motion', 'Every interactive component shares the same set of states, and motion stays functional.', section(vf, 'States', 3) + '\n\n### Motion\n' + section(vf, 'Motion', 3), None),
-    ('iconography', 'Iconography', 'One outline icon set, drawn on a 24px grid with 1px strokes.', section(brand, 'Iconography'), 'icons'),
+    ('iconography', 'Iconography', 'One outline icon set: 24px grid, 1px round strokes, a 12px live area.', section(brand, 'Iconography'), 'icons'),
     ('logo', 'Logo', 'The Figment monkey: a flat, friendly mark on a yellow tile.', md_doc('logo')['md'], 'logo'),
     ('layout', 'Editor layout', 'How the blocks fit together around the canvas.', md_doc('editor-layout')['md'], 'screens'),
     ('writing', 'Writing', 'A capable colleague: short, literal and calm.', section(brand, 'Content fundamentals'), None),
