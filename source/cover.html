@@ -1,0 +1,50 @@
+<style>
+  .cv { position: relative; width: 960px; height: 288px; background: var(--color-bg); overflow: hidden; }
+  .cv svg { position: absolute; left: 480px; top: 0; }
+  .cv .brand { fill: var(--color-bg-brand); }
+  .cv .comp { fill: var(--color-bg-component); }
+  .cv .ink { fill: var(--color-border-strong); }
+  .cv .tint { fill: var(--color-bg-selected); }
+  .cv .danger { fill: var(--color-bg-danger); }
+  .cv .cell { fill: var(--color-bg-secondary); }
+  .cv .r5 { rx: var(--radius); }
+  .cv .r13 { rx: var(--radius-13); }
+  .cv .txt { position: absolute; left: 40px; bottom: 32px; width: 420px; }
+  .cv .name { font-family: var(--font-sans); font-weight: 550; font-size: 96px; line-height: 0.95; letter-spacing: -2px; color: var(--color-text); margin: 0; }
+  .cv .tag { margin: 12px 0 0; font: var(--text-body-large); color: var(--color-text-secondary); }
+</style>
+<div class="cv">
+  <svg width="480" height="288" viewBox="0 0 480 288" aria-hidden="true">
+    <!--
+      blocks: color-bg-brand 192×152 slab, color-border-strong 112×112, color-bg-component 72×112, color-bg-selected 112×72, color-bg-danger 32×32 (tile sizes = row-h 32 + n × 40)
+      arrangement: a modular panel grid on a 40px pitch (row-h 32 + space-8), blocks merged across cells like panel sections, bleeding off the right edge
+      pattern: geometric, modular, dense UI → small 32px tiles in color-bg-secondary at radius 5 fill the free cells, like controls in a properties panel
+      scales: row-h 32, space-8 gap, radius (5px) on tiles, radius-13 on the large slabs
+    -->
+    <rect class="brand r13" x="16" y="24" width="192" height="152"/>
+    <rect class="comp r13" x="216" y="24" width="72" height="112"/>
+    <rect class="ink r13" x="296" y="24" width="112" height="112"/>
+    <rect class="tint r13" x="216" y="144" width="112" height="72"/>
+    <rect class="danger r5" x="336" y="144" width="32" height="32"/>
+    <rect class="cell r5" x="416" y="24" width="32" height="32"/>
+    <rect class="cell r5" x="456" y="24" width="32" height="32"/>
+    <rect class="cell r5" x="416" y="64" width="72" height="32"/>
+    <rect class="cell r5" x="416" y="104" width="32" height="32"/>
+    <rect class="cell r5" x="376" y="144" width="32" height="32"/>
+    <rect class="cell r5" x="416" y="144" width="72" height="32"/>
+    <rect class="cell r5" x="16" y="184" width="72" height="32"/>
+    <rect class="cell r5" x="96" y="184" width="72" height="32"/>
+    <rect class="cell r5" x="176" y="184" width="32" height="32"/>
+    <rect class="cell r5" x="336" y="184" width="152" height="32"/>
+    <rect class="cell r5" x="16" y="224" width="32" height="32"/>
+    <rect class="cell r5" x="56" y="224" width="152" height="32"/>
+    <rect class="cell r5" x="216" y="224" width="32" height="32"/>
+    <rect class="cell r5" x="256" y="224" width="72" height="32"/>
+    <rect class="brand r5" x="336" y="224" width="32" height="32"/>
+    <rect class="cell r5" x="376" y="224" width="112" height="32"/>
+  </svg>
+  <div class="txt">
+    <p class="name">Open Figment</p>
+    <p class="tag">Quiet panels around your work: one blue for action, one purple for components.</p>
+  </div>
+</div>
