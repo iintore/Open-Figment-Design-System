@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from './icons';
+import { AppIcon } from './iconParts';
+
+import { inline } from './markdown';
+import content from './content/content.json';
+
+// Each result shows its sidebar section as that section's icon, the same one the sidebar uses.
+const SECTION_ICON: Record<string, string> = Object.fromEntries((content.nav as { label: string; icon: string }[]).map((g) => [g.label, g.icon]));
 import { navigate } from './router';
 import { headingsOf, type Page } from './data';
 
@@ -98,12 +105,15 @@ export function SearchDialog({ pages, onClose }: { pages: Page[]; onClose: () =>
               onMouseMove={() => setHl(i)}
               onClick={() => go(h)}
             >
-              <span className="doc-search-sec">{h.page.section}</span>
+              <span className="doc-search-sec" title={h.page.section}>
+                <AppIcon name={SECTION_ICON[h.page.section] ?? 'file'} />
+                <span className="doc-sr">{h.page.section}</span>
+              </span>
               <span className="doc-search-title">
                 {h.page.title}
                 {h.heading && <span className="doc-search-head"> › {h.heading.text}</span>}
               </span>
-              {!h.heading && <span className="doc-search-lead">{h.excerpt ?? h.page.lead}</span>}
+              {!h.heading && <span className="doc-search-lead">{h.excerpt ?? inline(h.page.lead)}</span>}
             </button>
           ))}
         </div>
