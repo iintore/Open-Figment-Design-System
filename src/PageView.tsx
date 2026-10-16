@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { inline, renderMarkdown } from './markdown';
-import { headingsOf, type Page } from './data';
+import type { Page } from './data';
 import { navigate, pageHref } from './router';
 import { Icon } from './icons';
 import { Example, Hero, LiveMarkup } from './Preview';
@@ -20,22 +20,42 @@ const GALLERY_TITLE: Record<string, string> = { colors: 'Tokens', type: 'Type sc
 
 function Outline({ items }: { items: { id: string; text: string; level: number }[] }) {
   const [active, setActive] = useState(items[0]?.id);
+  // While a click-triggered smooth scroll runs, keep the clicked item active.
+  const pinned = useRef<{ id: string; until: number } | null>(null);
   useEffect(() => {
     const main = document.getElementById('doc-main');
     if (!main) return;
-    const onScroll = () => {
-      let cur = items[0]?.id;
-      for (const it of items) {
-        const el = document.getElementById(it.id);
-        if (el && el.getBoundingClientRect().top < 120) cur = it.id;
-      }
+    // The article scrolls inside #doc-main on wide screens and with the document on narrow ones.
+    const scroller = () => (main.scrollHeight > main.clientHeight + 1 ? main : document.scrollingElement!);
+    const update = () => {
+      const pin = pinned.current;
+      if (pin && performance.now() < pin.until) return setActive(pin.id);
+      pinned.current = null;
+      const sc = scroller();
+      const top = sc === main ? main.getBoundingClientRect().top : 0;
+      const view = sc === main ? main.clientHeight : innerHeight;
+      const els = items.map((it) => document.getElementById(it.id)).filter((el): el is HTMLElement => !!el);
+      if (!els.length) return;
+      // The activation line sits near the top, then slides down over the last screen of the
+      // page, so headings near the end (which can never reach the top) still each get a turn.
+      const max = sc.scrollHeight - sc.clientHeight;
+      const span = Math.min(view, max);
+      const line = span > 0 ? 96 + (view - 96) * Math.max(0, 1 - (max - sc.scrollTop) / span) : 96;
+      let cur = els[0].id;
+      for (const el of els) if (el.getBoundingClientRect().top - top <= line) cur = el.id;
       setActive(cur);
     };
-    onScroll();
-    main.addEventListener('scroll', onScroll, { passive: true });
-    return () => main.removeEventListener('scroll', onScroll);
+    update();
+    main.addEventListener('scroll', update, { passive: true });
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    return () => {
+      main.removeEventListener('scroll', update);
+      removeEventListener('scroll', update);
+      removeEventListener('resize', update);
+    };
   }, [items]);
-  if (items.length < 2) return <aside className="doc-toc" />;
+  if (!items.length) return <aside className="doc-toc" />;
   return (
     <aside className="doc-toc" aria-label="On this page">
       <div className="doc-toc-title">On this page</div>
@@ -44,8 +64,11 @@ function Outline({ items }: { items: { id: string; text: string; level: number }
           <li key={it.id} className={(it.level === 3 ? 'l3 ' : '') + (it.id === active ? 'on' : '')}>
             <a
               href={'#' + it.id}
+              aria-current={it.id === active ? 'location' : undefined}
               onClick={(e) => {
                 e.preventDefault();
+                pinned.current = { id: it.id, until: performance.now() + 900 };
+                setActive(it.id);
                 document.getElementById(it.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 history.replaceState(null, '', '#' + it.id);
               }}
@@ -62,12 +85,24 @@ function Outline({ items }: { items: { id: string; text: string; level: number }
 export function PageView({ path, pages }: { path: string; pages: Page[] }) {
   const index = pages.findIndex((p) => p.path === path);
   const page = pages[index];
-  const outline = useMemo(() => {
-    if (!page) return [];
-    const ex = (page.examples ?? []).map((e) => ({ id: 'ex-' + e.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'), text: e.title, level: 3 }));
-    const gallery = page.kind && GALLERY[page.kind] ? [{ id: 'gallery', text: GALLERY_TITLE[page.kind], level: 2 }] : [];
-    const examples = page.examples?.length ? [{ id: 'examples', text: 'Examples', level: 2 }, ...ex] : page.full ? [{ id: 'preview', text: 'Preview', level: 2 }] : [];
-    return [...gallery, ...examples, ...headingsOf(page.md)];
+  // The outline lists the headings actually rendered in the article (prose, examples and
+  // gallery sections alike), so every page gets one that matches what's on screen.
+  const [outline, setOutline] = useState<{ id: string; text: string; level: number }[]>([]);
+  useEffect(() => {
+    const article = document.querySelector('.doc-article');
+    if (!article) return;
+    const read = () => {
+      const next = [...article.querySelectorAll<HTMLElement>('h2[id], h3[id]')].map((h) => {
+        const copy = h.cloneNode(true) as HTMLElement;
+        copy.querySelectorAll('.doc-anchor, .doc-example-sub, [aria-hidden="true"]').forEach((n) => n.remove());
+        return { id: h.id, text: copy.textContent!.trim(), level: h.tagName === 'H3' ? 3 : 2 };
+      });
+      setOutline((prev) => (JSON.stringify(prev) === JSON.stringify(next) ? prev : next));
+    };
+    read();
+    const mo = new MutationObserver(read);
+    mo.observe(article, { childList: true, subtree: true });
+    return () => mo.disconnect();
   }, [page]);
 
   useEffect(() => {
