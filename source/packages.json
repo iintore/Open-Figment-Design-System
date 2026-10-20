@@ -1,0 +1,346 @@
+{
+  "version": "1.1.0",
+  "scope": "@open-figment",
+  "components": [
+    {
+      "dir": "button",
+      "exports": [
+        "Button"
+      ],
+      "usage": "<Button variant=\"primary\" onClick={share}>Share</Button>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "icon-button",
+      "exports": [
+        "IconButton"
+      ],
+      "usage": "<IconButton label=\"Add fill\" onClick={add}>\n  <IconPlus />\n</IconButton>",
+      "icons": [
+        "IconButton",
+        "IconPlus"
+      ],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "tool-button",
+      "exports": [
+        "ToolButton"
+      ],
+      "usage": "<ToolButton icon={<IconRectangle />} label=\"Rectangle\" title=\"Rectangle  R\" active caret onCaretClick={openShapes} />",
+      "icons": [
+        "IconRectangle"
+      ],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "mode-switch",
+      "exports": [
+        "ModeSwitch"
+      ],
+      "usage": "<ModeSwitch\n  value={mode}\n  onChange={setMode}\n  options={[\n    { value: 'design', label: 'Design mode', icon: <IconMove /> },\n    { value: 'dev', label: 'Dev Mode', icon: <IconCode />, tone: 'dev' },\n  ]}\n/>",
+      "icons": [
+        "IconMove",
+        "IconCode"
+      ],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "product-pill",
+      "exports": [
+        "ProductPill"
+      ],
+      "usage": "<ProductPill icon={<IconPen />} color=\"#0d99ff\" onClick={createFile}>Design</ProductPill>",
+      "icons": [
+        "IconPen"
+      ],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "star-button",
+      "exports": [
+        "StarButton"
+      ],
+      "usage": "<StarButton starred={starred} onChange={setStarred} standalone />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "number-field",
+      "exports": [
+        "NumberField"
+      ],
+      "usage": "<NumberField label=\"X\" value={x} onChange={setX} />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "text-field",
+      "exports": [
+        "TextField"
+      ],
+      "usage": "<TextField value={name} onChange={setName} placeholder=\"Add a description\" />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "select",
+      "exports": [
+        "Select"
+      ],
+      "usage": "<Select\n  value={sizing}\n  onChange={setSizing}\n  options={[\n    { value: 'fixed', label: 'Fixed width' },\n    { value: 'hug', label: 'Hug contents' },\n    { value: 'fill', label: 'Fill container' },\n  ]}\n/>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "segmented-control",
+      "exports": [
+        "SegmentedControl"
+      ],
+      "usage": "<SegmentedControl\n  value={view}\n  onChange={setView}\n  options={[\n    { value: 'grid', icon: <IconGrid />, title: 'Grid view' },\n    { value: 'list', icon: <IconList />, title: 'List view' },\n  ]}\n/>",
+      "icons": [
+        "IconGrid",
+        "IconList"
+      ],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "checkbox",
+      "exports": [
+        "Checkbox"
+      ],
+      "usage": "<Checkbox checked={clip} onChange={setClip}>Clip content</Checkbox>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "search-field",
+      "exports": [
+        "SearchField"
+      ],
+      "usage": "<SearchField value={query} onChange={setQuery} />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "paint-row",
+      "exports": [
+        "PaintRow"
+      ],
+      "usage": "<PaintRow\n  color=\"0D99FF\"\n  opacity={100}\n  visible\n  onColorChange={setColor}\n  onOpacityChange={setOpacity}\n  onVisibleChange={setVisible}\n  onRemove={remove}\n/>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "tab",
+      "exports": [
+        "Tab",
+        "TabBar",
+        "TabHome",
+        "TabNew"
+      ],
+      "usage": "<TabBar>\n  <TabHome onClick={goHome} />\n  <Tab title=\"Welcome to Figment\" active onClose={close} />\n  <TabNew onClick={newFile} />\n</TabBar>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "rail-item",
+      "exports": [
+        "RailItem",
+        "Rail"
+      ],
+      "usage": "<Rail>\n  <RailItem icon={<IconFile />} label=\"File\" shortcut=\"⌥1\" active />\n  <RailItem icon={<IconAssets />} label=\"Assets\" shortcut=\"⌥2\" />\n</Rail>",
+      "icons": [
+        "IconFile",
+        "IconAssets"
+      ],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "page-row",
+      "exports": [
+        "PageRow"
+      ],
+      "usage": "<PageRow name=\"Design\" active onSelect={open} />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "layer-row",
+      "exports": [
+        "LayerRow"
+      ],
+      "usage": "<LayerRow\n  name=\"Home\"\n  icon={<IconFrame />}\n  expanded={open}\n  onToggle={toggle}\n  selected\n  onLockedChange={setLocked}\n  onHiddenChange={setHidden}\n/>",
+      "icons": [
+        "IconFrame"
+      ],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "menu",
+      "exports": [
+        "Menu"
+      ],
+      "usage": "<Menu\n  x={event.clientX}\n  y={event.clientY}\n  onClose={close}\n  items={[\n    { label: 'Copy', shortcut: '⌘C', onSelect: copy },\n    { separator: true },\n    { label: 'Delete', shortcut: '⌫', onSelect: remove },\n  ]}\n/>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "tooltip",
+      "exports": [
+        "Tooltip"
+      ],
+      "usage": "<Tooltip x={rect.left} y={rect.top - 32}>Rectangle  R</Tooltip>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "toast",
+      "exports": [
+        "Toast"
+      ],
+      "usage": "{message && <Toast>{message}</Toast>}",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "popover",
+      "exports": [
+        "Popover"
+      ],
+      "usage": "<Popover title=\"Drop shadow\" onClose={close}>\n  …settings\n</Popover>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "dialog",
+      "exports": [
+        "Dialog",
+        "DialogItem"
+      ],
+      "usage": "<Dialog title=\"Keyboard shortcuts\" onClose={close}>\n  <DialogItem path=\"View\" shortcut=\"⌘+\">Zoom in</DialogItem>\n</Dialog>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "drawer",
+      "exports": [
+        "Drawer"
+      ],
+      "usage": "<Drawer title=\"Version history\" onClose={close}>\n  …\n</Drawer>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "badge",
+      "exports": [
+        "Badge"
+      ],
+      "usage": "<Badge>Free</Badge>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "avatar",
+      "exports": [
+        "Avatar"
+      ],
+      "usage": "<Avatar name=\"Ada\" color=\"#14ae5c\" />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "property-section",
+      "exports": [
+        "PropertySection",
+        "Sublabel",
+        "PropertyGrid"
+      ],
+      "usage": "<PropertySection title=\"Position\">\n  <Sublabel>Position</Sublabel>\n  <PropertyGrid>…</PropertyGrid>\n</PropertySection>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "type-header",
+      "exports": [
+        "TypeHeader"
+      ],
+      "usage": "<TypeHeader label=\"Frame\" onLabelClick={openPresets}>\n  <IconButton label=\"More actions\"><IconDots /></IconButton>\n</TypeHeader>",
+      "icons": [
+        "IconButton",
+        "IconDots"
+      ],
+      "iconButton": true,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "file-card",
+      "exports": [
+        "FileCard"
+      ],
+      "usage": "<FileCard name=\"Welcome to Figment\" edited=\"Edited just now\" starred={starred} onStarredChange={setStarred} onOpen={open} />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "file-row",
+      "exports": [
+        "FileRow"
+      ],
+      "usage": "<FileRow name=\"Welcome to Figment\" edited=\"Edited just now\" onOpen={open} />",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": true
+    },
+    {
+      "dir": "resource-card",
+      "exports": [
+        "ResourceCard"
+      ],
+      "usage": "<ResourceCard title=\"Blank design file\" description=\"Start from scratch\" icon={<IconPlus />} onClick={create} />",
+      "icons": [
+        "IconPlus"
+      ],
+      "iconButton": false,
+      "bundlesIcons": false
+    },
+    {
+      "dir": "code-block",
+      "exports": [
+        "CodeBlock"
+      ],
+      "usage": "<CodeBlock>{'width: 393px;\\nheight: 852px;'}</CodeBlock>",
+      "icons": [],
+      "iconButton": false,
+      "bundlesIcons": false
+    }
+  ]
+}

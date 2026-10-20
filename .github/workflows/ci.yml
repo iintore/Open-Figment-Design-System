@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,3 +19,22 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+
+  packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build all packages
+        run: npm run packages:build
+      - name: Unit tests
+        run: npm run packages:test
+      - name: publint + Are the Types Wrong, pack
+        run: npm run packages:check
+      - name: Install with npm, pnpm, Yarn 1 and Yarn 4, build and run in Chromium
+        run: node scripts/packages/install-test.mjs

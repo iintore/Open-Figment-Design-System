@@ -1,0 +1,119 @@
+{
+  "name": "@open-figment/react",
+  "version": "1.1.0",
+  "description": "The whole Open Figment design system for React: 31 components, 91 icons, tokens and one stylesheet.",
+  "keywords": [
+    "open-figment",
+    "design-system",
+    "react",
+    "components",
+    "ui"
+  ],
+  "homepage": "https://open-figment-design-system.vercel.app",
+  "bugs": {
+    "url": "https://github.com/iintore/Open-Figment-Design-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iintore/Open-Figment-Design-System.git",
+    "directory": "packages/react"
+  },
+  "license": "MIT",
+  "author": "Tony Lewis MANZI",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./styles.css": {
+      "import": {
+        "types": "./styles.css.d.ts",
+        "default": "./styles.css"
+      },
+      "require": {
+        "types": "./styles.css.d.cts",
+        "default": "./styles.css"
+      }
+    },
+    "./tokens.css": {
+      "import": {
+        "types": "./tokens.css.d.ts",
+        "default": "./tokens.css"
+      },
+      "require": {
+        "types": "./tokens.css.d.cts",
+        "default": "./tokens.css"
+      }
+    },
+    "./fonts/*": "./fonts/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles.css",
+    "tokens.css",
+    "*.css.d.ts",
+    "*.css.d.cts",
+    "fonts",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@open-figment/tokens": "^1.1.0",
+    "@open-figment/icons": "^1.1.0",
+    "@open-figment/button": "^1.1.0",
+    "@open-figment/icon-button": "^1.1.0",
+    "@open-figment/tool-button": "^1.1.0",
+    "@open-figment/mode-switch": "^1.1.0",
+    "@open-figment/product-pill": "^1.1.0",
+    "@open-figment/star-button": "^1.1.0",
+    "@open-figment/number-field": "^1.1.0",
+    "@open-figment/text-field": "^1.1.0",
+    "@open-figment/select": "^1.1.0",
+    "@open-figment/segmented-control": "^1.1.0",
+    "@open-figment/checkbox": "^1.1.0",
+    "@open-figment/search-field": "^1.1.0",
+    "@open-figment/paint-row": "^1.1.0",
+    "@open-figment/tab": "^1.1.0",
+    "@open-figment/rail-item": "^1.1.0",
+    "@open-figment/page-row": "^1.1.0",
+    "@open-figment/layer-row": "^1.1.0",
+    "@open-figment/menu": "^1.1.0",
+    "@open-figment/tooltip": "^1.1.0",
+    "@open-figment/toast": "^1.1.0",
+    "@open-figment/popover": "^1.1.0",
+    "@open-figment/dialog": "^1.1.0",
+    "@open-figment/drawer": "^1.1.0",
+    "@open-figment/badge": "^1.1.0",
+    "@open-figment/avatar": "^1.1.0",
+    "@open-figment/property-section": "^1.1.0",
+    "@open-figment/type-header": "^1.1.0",
+    "@open-figment/file-card": "^1.1.0",
+    "@open-figment/file-row": "^1.1.0",
+    "@open-figment/resource-card": "^1.1.0",
+    "@open-figment/code-block": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1092,3 +1092,41 @@ svg {
   width: 24px;
   height: 24px;
 }
+
+/* Install block: package manager tabs over a bare command, styled like the example cards. */
+.doc-install {
+  margin: 8px 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+}
+.doc-install-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+.doc-install-tabs button {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font: 550 12.5px/1 var(--doc-font);
+  color: var(--color-text-secondary);
+  transition: color var(--doc-fast), background var(--doc-fast);
+}
+.doc-install-tabs button:hover {
+  color: var(--color-text);
+}
+.doc-install-tabs button.on {
+  background: var(--color-bg);
+  color: var(--color-text-brand);
+  box-shadow: 0 0 0 0.5px var(--color-bordertranslucent), 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.doc-install .doc-code.bare {
+  border: 0;
+  border-radius: 0;
+}
+.doc-install-section {
+  margin-bottom: 8px;
+}

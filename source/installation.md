@@ -1,11 +1,68 @@
 # Installation
 
-Use the Open Figment tokens and component styles in a page, or work on the components inside the app.
+Install the whole system or one component at a time, with npm, pnpm or Yarn. Every package ships ES modules, CommonJS and TypeScript types, and works with React 18 and 19.
+
+## With a package manager
+
+### The whole system
+`@open-figment/react` has every component, all 91 icons and the tokens, with one stylesheet.
+
+```install
+@open-figment/react
+```
+
+```tsx
+import '@open-figment/react/styles.css'; // once, at the root of your app
+import { Button, IconButton, IconPlus } from '@open-figment/react';
+
+export function Toolbar() {
+  return (
+    <>
+      <Button variant="primary">Share</Button>
+      <IconButton label="Add"><IconPlus /></IconButton>
+    </>
+  );
+}
+```
+
+### One component
+Each component is also its own package, with its own stylesheet. Load the tokens once.
+
+```install
+@open-figment/button
+```
+
+```tsx
+import '@open-figment/tokens/tokens.css'; // once per app
+import '@open-figment/button/styles.css';
+import { Button } from '@open-figment/button';
+
+<Button variant="primary">Share</Button>
+```
+
+Every component page lists its package under **Install**.
+
+### The packages
+| Package | What's in it |
+| --- | --- |
+| `@open-figment/react` | Every component, icon and token, and `styles.css` with all of them |
+| `@open-figment/<component>` | One component and its `styles.css`, e.g. `@open-figment/select` |
+| `@open-figment/icons` | 91 icons as React components (`IconPlus`, `<Icon name="plus" />`) and SVG files |
+| `@open-figment/tokens` | `tokens.css` (variables, light and dark, Inter), `tokens.json`, typed `tokens` |
+| `@open-figment/styles` | All component CSS without React, for any framework or plain HTML |
+
+### Dark theme
+Set `data-theme="dark"` on `<html>`, or on any container to theme just that part.
+
+### Frameworks
+- **Vite, Remix, Parcel, webpack:** import the CSS files from JavaScript as shown.
+- **Next.js (App Router):** import the stylesheets in `app/layout.tsx`. Components are marked `'use client'`, so you can use them from server components.
+- **TypeScript:** types are included, including for the CSS imports.
 
 ## In a web page
 
 ### Add the stylesheets
-Load the tokens first, then the component styles. Both files are in the design system and in this site under `ds/`.
+Without a bundler, load the tokens first, then the component styles. Both are in `@open-figment/styles` (`tokens.css`, `components.css`) and on this site under `ds/`.
 
 ```html
 <link rel="stylesheet" href="tokens.css" />

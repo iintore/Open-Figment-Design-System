@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from 'react';
 import { CodeBlock } from './CodeBlock';
+import { InstallTabs } from './InstallTabs';
 
 // A small Markdown renderer for the docs content: headings (with anchors), paragraphs, lists,
 // pipe tables, fenced code and inline code / bold / italic / links. The content is ours, so it
@@ -66,7 +67,7 @@ export function renderMarkdown(src: string, headings: Heading[] = [], keyPrefix 
       i++;
       while (i < lines.length && !lines[i].startsWith('```')) buf.push(lines[i++]);
       i++;
-      blocks.push(<CodeBlock key={key()} code={buf.join('\n')} lang={lang || 'text'} />);
+      blocks.push(lang === 'install' ? <InstallTabs key={key()} packages={buf.join(' ').trim()} /> : <CodeBlock key={key()} code={buf.join('\n')} lang={lang || 'text'} />);
       continue;
     }
     const h = /^(#{2,4}) (.*)$/.exec(line);

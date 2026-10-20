@@ -10,6 +10,40 @@ live previews rendered from the app's real markup and stylesheet.
 **Docs:** [open-figment-design-system.vercel.app](https://open-figment-design-system.vercel.app)  
 **App:** [open-figment.vercel.app](https://open-figment.vercel.app)
 
+## Install
+
+The whole system, or any single component, from npm with npm, pnpm or Yarn. ES modules,
+CommonJS and TypeScript types; React 18 and 19.
+
+```bash
+npm install @open-figment/react       # or: pnpm add / yarn add
+```
+
+```tsx
+import '@open-figment/react/styles.css';
+import { Button, Select, IconPlus } from '@open-figment/react';
+```
+
+One component on its own:
+
+```bash
+npm install @open-figment/button
+```
+
+```tsx
+import '@open-figment/tokens/tokens.css'; // once per app
+import '@open-figment/button/styles.css';
+import { Button } from '@open-figment/button';
+```
+
+| Package | Contents |
+| --- | --- |
+| [`@open-figment/react`](packages/react) | All 31 components, 91 icons and the tokens, one `styles.css` |
+| `@open-figment/<component>` | One component and its `styles.css`: [`button`](packages/button), [`select`](packages/select), [`menu`](packages/menu), [`number-field`](packages/number-field), [`layer-row`](packages/layer-row), [and 26 more](packages) |
+| [`@open-figment/icons`](packages/icons) | 91 icons as React components and SVG files |
+| [`@open-figment/tokens`](packages/tokens) | CSS variables (light and dark), JSON, typed JS, the Inter font |
+| [`@open-figment/styles`](packages/styles) | All component CSS, for non-React use |
+
 ## What's inside
 
 - **Foundations:** colour (light and dark), typography, spacing and size, radius, elevation,
@@ -33,11 +67,30 @@ npm run build     # static site in dist/
 npm run check     # type-check, lint, tests and build (what CI runs)
 ```
 
-## Use the tokens and styles
+## The packages
 
-The built site serves the system's stylesheets at `/ds/tokens.css` (tokens for both themes) and
-`/ds/bundle.css` (component styles). Load both, set `data-theme="light"` or `"dark"` on the root,
-and use the class names shown on each component page. See the **Installation** page.
+`packages/` is an npm workspace. Component sources are `packages/<name>/src/index.tsx`; the
+tokens, icons, styles and react packages, every `styles.css` and the compiled `dist/` folders are
+generated from the same sources the docs use.
+
+```bash
+npm run packages:build     # generate and compile all 35 packages (ESM, CJS, types, CSS)
+npm run packages:test      # render every component and check its markup, CSS and exports
+npm run packages:check     # publint + Are the Types Wrong on every package, pack tarballs
+node scripts/packages/install-test.mjs   # install the tarballs with npm, pnpm, Yarn 1 and 4,
+                                         # build an app with each and test it in Chromium
+```
+
+Each component's `styles.css` holds only the rules for its own classes (plus those of components
+it renders), with element defaults scoped to them, so nothing leaks into the rest of your app.
+
+### Releasing
+
+1. `npm run packages:version -- 1.2.0` and `npm run packages:build`.
+2. Commit, then `git tag v1.2.0 && git push --follow-tags`.
+3. The **Release packages** workflow tests everything again and publishes all packages to npm
+   with provenance. It needs an `NPM_TOKEN` secret with publish rights to the `@open-figment`
+   scope. (To publish from your machine instead: `npm login`, then `npm run release`.)
 
 ## How the content is made
 

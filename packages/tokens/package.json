@@ -1,0 +1,82 @@
+{
+  "name": "@open-figment/tokens",
+  "version": "1.1.0",
+  "description": "Open Figment design tokens: CSS variables (light and dark), JSON and typed JS, with the Inter font.",
+  "keywords": [
+    "open-figment",
+    "design-system",
+    "tokens",
+    "css-variables",
+    "theme"
+  ],
+  "homepage": "https://open-figment-design-system.vercel.app",
+  "bugs": {
+    "url": "https://github.com/iintore/Open-Figment-Design-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iintore/Open-Figment-Design-System.git",
+    "directory": "packages/tokens"
+  },
+  "license": "MIT",
+  "author": "Tony Lewis MANZI",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./tokens.css": {
+      "import": {
+        "types": "./tokens.css.d.ts",
+        "default": "./tokens.css"
+      },
+      "require": {
+        "types": "./tokens.css.d.cts",
+        "default": "./tokens.css"
+      }
+    },
+    "./base.css": {
+      "import": {
+        "types": "./base.css.d.ts",
+        "default": "./base.css"
+      },
+      "require": {
+        "types": "./base.css.d.cts",
+        "default": "./base.css"
+      }
+    },
+    "./tokens.json": "./tokens.json",
+    "./fonts/*": "./fonts/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "tokens.css",
+    "base.css",
+    "*.css.d.ts",
+    "*.css.d.cts",
+    "tokens.json",
+    "fonts",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

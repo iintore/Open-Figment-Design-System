@@ -23,6 +23,8 @@ export interface Page {
   hero?: string;
   /** Repository file that holds this page's content. */
   source?: string;
+  /** Install and usage markdown for components published as npm packages. */
+  install?: string;
   section: string;
   /** Sidebar sub-group (Actions, Inputs… for components; Shell, Panels, Views for blocks). */
   subsection?: string;

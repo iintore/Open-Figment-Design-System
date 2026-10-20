@@ -220,6 +220,30 @@ FOUNDATION_SOURCE = {'logo': 'source/logo.md', 'layout': 'source/editor-layout.m
 for key, title, lead, md, kind in F:
     pages['foundations/' + key] = {'title': title, 'lead': lead, 'md': md, 'source': FOUNDATION_SOURCE.get(key, 'source/brand-book.md'), **({'kind': kind} if kind else {})}
 
+PKG = json.load(open(os.path.join(SOURCE, 'packages.json'))) if os.path.exists(os.path.join(SOURCE, 'packages.json')) else None
+PKG_BY_DIR = {c['dir']: c for c in PKG['components']} if PKG else {}
+
+
+def install_md(dir_):
+    """Install and Usage sections for a component published as an npm package."""
+    c = PKG_BY_DIR.get(dir_)
+    if not c:
+        return None
+    scope = PKG['scope']
+    extra = [] if c['bundlesIcons'] or not c['icons'] else [f'{scope}/icons']
+    imports = [f"import '{scope}/tokens/tokens.css'; // once per app", f"import '{scope}/{dir_}/styles.css';", f"import {{ {', '.join(c['exports'])} }} from '{scope}/{dir_}';"]
+    if c['icons']:
+        imports.append(f"import {{ {', '.join(c['icons'])} }} from '{scope}/icons';")
+    if c['iconButton']:
+        imports.append(f"import {{ IconButton }} from '{scope}/icon-button';")
+        extra.append(f'{scope}/icon-button')
+    return (
+        f"Install this component on its own, or get every component from `{scope}/react`.\n\n"
+        f"```install\n{' '.join([f'{scope}/{dir_}', *extra])}\n```\n\n"
+        f"```tsx\n" + '\n'.join(imports) + f"\n\n{c['usage']}\n```"
+    )
+
+
 for spec in C + B:
     body = re.sub(r'^# .*\n+', '', spec['readme'].strip())
     summary, rest = (body.split('\n\n', 1) + [''])[:2]
@@ -229,6 +253,7 @@ for spec in C + B:
         'title': spec['name'], 'lead': summary.strip(), 'md': rest.strip(), 'kind': 'block' if is_block else 'component', 'group': spec['group'],
         'examples': (ex if is_block else group_states(ex)) or None, 'full': spec['preview'], 'width': spec.get('width'), 'height': spec['height'],
         'source': 'scripts/components_blocks.py' if is_block else 'scripts/components_primitives.py',
+        **({'install': install_md(slug(spec['name']))} if not is_block and install_md(slug(spec['name'])) else {}),
     }
 
 # ---------------------------------------------------------------- Navigation

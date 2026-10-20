@@ -137,6 +137,12 @@ export function PageView({ path, pages }: { path: string; pages: Page[] }) {
               {GALLERY[page.kind]()}
             </section>
           )}
+          {page.install && (
+            <section className="doc-install-section">
+              <h2 id="install">Install</h2>
+              {renderMarkdown(page.install)}
+            </section>
+          )}
           {page.examples?.length ? (
             <section>
               <h2 id="examples">Examples</h2>

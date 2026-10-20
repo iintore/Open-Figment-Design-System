@@ -1,0 +1,40 @@
+name: Release packages
+
+# Publishes every @open-figment package to npm when a version tag is pushed:
+#   npm run packages:version -- 1.2.0 && npm run packages:build
+#   git commit -am "Release 1.2.0" && git tag v1.2.0 && git push --follow-tags
+# Needs the NPM_TOKEN repository secret (an npm automation token with publish rights to the
+# @open-figment scope). Packages are published with npm provenance.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run packages:build
+      - name: Tag matches packages/version.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: test "v$(node -p "require('./packages/version.json').version")" = "${GITHUB_REF_NAME}"
+      - run: npm run packages:test
+      - run: npm run packages:check
+      - run: node scripts/packages/install-test.mjs npm pnpm
+      - name: Publish
+        run: npm publish --workspaces --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

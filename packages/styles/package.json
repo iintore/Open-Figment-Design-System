@@ -1,0 +1,88 @@
+{
+  "name": "@open-figment/styles",
+  "version": "1.1.0",
+  "description": "All Open Figment component CSS, for use with or without React: class-based styles, tokens and the Inter font.",
+  "keywords": [
+    "open-figment",
+    "design-system",
+    "css",
+    "styles"
+  ],
+  "homepage": "https://open-figment-design-system.vercel.app",
+  "bugs": {
+    "url": "https://github.com/iintore/Open-Figment-Design-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iintore/Open-Figment-Design-System.git",
+    "directory": "packages/styles"
+  },
+  "license": "MIT",
+  "author": "Tony Lewis MANZI",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./index.css.d.ts",
+        "default": "./index.css"
+      },
+      "require": {
+        "types": "./index.css.d.cts",
+        "default": "./index.css"
+      }
+    },
+    "./index.css": {
+      "import": {
+        "types": "./index.css.d.ts",
+        "default": "./index.css"
+      },
+      "require": {
+        "types": "./index.css.d.cts",
+        "default": "./index.css"
+      }
+    },
+    "./components.css": {
+      "import": {
+        "types": "./components.css.d.ts",
+        "default": "./components.css"
+      },
+      "require": {
+        "types": "./components.css.d.cts",
+        "default": "./components.css"
+      }
+    },
+    "./tokens.css": {
+      "import": {
+        "types": "./tokens.css.d.ts",
+        "default": "./tokens.css"
+      },
+      "require": {
+        "types": "./tokens.css.d.cts",
+        "default": "./tokens.css"
+      }
+    },
+    "./components/*": "./components/*",
+    "./fonts/*": "./fonts/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.css",
+    "components.css",
+    "tokens.css",
+    "*.css.d.ts",
+    "*.css.d.cts",
+    "components",
+    "fonts",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

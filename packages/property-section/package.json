@@ -1,0 +1,74 @@
+{
+  "name": "@open-figment/property-section",
+  "version": "1.1.0",
+  "description": "A titled group in the properties panel (Position, Layout, Appearance, Fill, Stroke, Effects, Export) with optional header actions.",
+  "keywords": [
+    "open-figment",
+    "design-system",
+    "react",
+    "component",
+    "property-section",
+    "display"
+  ],
+  "homepage": "https://open-figment-design-system.vercel.app/components/property-section",
+  "bugs": {
+    "url": "https://github.com/iintore/Open-Figment-Design-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iintore/Open-Figment-Design-System.git",
+    "directory": "packages/property-section"
+  },
+  "license": "MIT",
+  "author": "Tony Lewis MANZI",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./styles.css": {
+      "import": {
+        "types": "./styles.css.d.ts",
+        "default": "./styles.css"
+      },
+      "require": {
+        "types": "./styles.css.d.cts",
+        "default": "./styles.css"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles.css",
+    "*.css.d.ts",
+    "*.css.d.cts",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@open-figment/tokens": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
