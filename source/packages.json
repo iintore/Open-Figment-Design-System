@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "scope": "@open-figment",
+  "package": "@krackedui/open-figment",
   "components": [
     {
       "dir": "button",
@@ -9,8 +9,7 @@
       ],
       "usage": "<Button variant=\"primary\" onClick={share}>Share</Button>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "icon-button",
@@ -22,8 +21,7 @@
         "IconButton",
         "IconPlus"
       ],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "tool-button",
@@ -34,8 +32,7 @@
       "icons": [
         "IconRectangle"
       ],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "mode-switch",
@@ -47,8 +44,7 @@
         "IconMove",
         "IconCode"
       ],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "product-pill",
@@ -59,8 +55,7 @@
       "icons": [
         "IconPen"
       ],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "star-button",
@@ -69,8 +64,7 @@
       ],
       "usage": "<StarButton starred={starred} onChange={setStarred} standalone />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "number-field",
@@ -79,8 +73,7 @@
       ],
       "usage": "<NumberField label=\"X\" value={x} onChange={setX} />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "text-field",
@@ -89,8 +82,7 @@
       ],
       "usage": "<TextField value={name} onChange={setName} placeholder=\"Add a description\" />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "select",
@@ -99,8 +91,7 @@
       ],
       "usage": "<Select\n  value={sizing}\n  onChange={setSizing}\n  options={[\n    { value: 'fixed', label: 'Fixed width' },\n    { value: 'hug', label: 'Hug contents' },\n    { value: 'fill', label: 'Fill container' },\n  ]}\n/>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "segmented-control",
@@ -112,8 +103,7 @@
         "IconGrid",
         "IconList"
       ],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "checkbox",
@@ -122,8 +112,7 @@
       ],
       "usage": "<Checkbox checked={clip} onChange={setClip}>Clip content</Checkbox>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "search-field",
@@ -132,8 +121,7 @@
       ],
       "usage": "<SearchField value={query} onChange={setQuery} />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "paint-row",
@@ -142,8 +130,7 @@
       ],
       "usage": "<PaintRow\n  color=\"0D99FF\"\n  opacity={100}\n  visible\n  onColorChange={setColor}\n  onOpacityChange={setOpacity}\n  onVisibleChange={setVisible}\n  onRemove={remove}\n/>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "tab",
@@ -155,8 +142,7 @@
       ],
       "usage": "<TabBar>\n  <TabHome onClick={goHome} />\n  <Tab title=\"Welcome to Figment\" active onClose={close} />\n  <TabNew onClick={newFile} />\n</TabBar>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "rail-item",
@@ -169,8 +155,7 @@
         "IconFile",
         "IconAssets"
       ],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "page-row",
@@ -179,8 +164,7 @@
       ],
       "usage": "<PageRow name=\"Design\" active onSelect={open} />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "layer-row",
@@ -191,8 +175,7 @@
       "icons": [
         "IconFrame"
       ],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "menu",
@@ -201,8 +184,7 @@
       ],
       "usage": "<Menu\n  x={event.clientX}\n  y={event.clientY}\n  onClose={close}\n  items={[\n    { label: 'Copy', shortcut: '⌘C', onSelect: copy },\n    { separator: true },\n    { label: 'Delete', shortcut: '⌫', onSelect: remove },\n  ]}\n/>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "tooltip",
@@ -211,8 +193,7 @@
       ],
       "usage": "<Tooltip x={rect.left} y={rect.top - 32}>Rectangle  R</Tooltip>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "toast",
@@ -221,8 +202,7 @@
       ],
       "usage": "{message && <Toast>{message}</Toast>}",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "popover",
@@ -231,8 +211,7 @@
       ],
       "usage": "<Popover title=\"Drop shadow\" onClose={close}>\n  …settings\n</Popover>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "dialog",
@@ -242,8 +221,7 @@
       ],
       "usage": "<Dialog title=\"Keyboard shortcuts\" onClose={close}>\n  <DialogItem path=\"View\" shortcut=\"⌘+\">Zoom in</DialogItem>\n</Dialog>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "drawer",
@@ -252,8 +230,7 @@
       ],
       "usage": "<Drawer title=\"Version history\" onClose={close}>\n  …\n</Drawer>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "badge",
@@ -262,8 +239,7 @@
       ],
       "usage": "<Badge>Free</Badge>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "avatar",
@@ -272,8 +248,7 @@
       ],
       "usage": "<Avatar name=\"Ada\" color=\"#14ae5c\" />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "property-section",
@@ -284,8 +259,7 @@
       ],
       "usage": "<PropertySection title=\"Position\">\n  <Sublabel>Position</Sublabel>\n  <PropertyGrid>…</PropertyGrid>\n</PropertySection>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "type-header",
@@ -297,8 +271,7 @@
         "IconButton",
         "IconDots"
       ],
-      "iconButton": true,
-      "bundlesIcons": true
+      "iconButton": true
     },
     {
       "dir": "file-card",
@@ -307,8 +280,7 @@
       ],
       "usage": "<FileCard name=\"Welcome to Figment\" edited=\"Edited just now\" starred={starred} onStarredChange={setStarred} onOpen={open} />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "file-row",
@@ -317,8 +289,7 @@
       ],
       "usage": "<FileRow name=\"Welcome to Figment\" edited=\"Edited just now\" onOpen={open} />",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": true
+      "iconButton": false
     },
     {
       "dir": "resource-card",
@@ -329,8 +300,7 @@
       "icons": [
         "IconPlus"
       ],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     },
     {
       "dir": "code-block",
@@ -339,8 +309,7 @@
       ],
       "usage": "<CodeBlock>{'width: 393px;\\nheight: 852px;'}</CodeBlock>",
       "icons": [],
-      "iconButton": false,
-      "bundlesIcons": false
+      "iconButton": false
     }
   ]
 }

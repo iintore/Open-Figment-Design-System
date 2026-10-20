@@ -1,0 +1,969 @@
+{
+  "name": "@krackedui/open-figment",
+  "version": "1.1.0",
+  "description": "The Open Figment design system for React: 31 components, 91 icons and design tokens, with one stylesheet or one per component.",
+  "keywords": [
+    "krackedui",
+    "open-figment",
+    "design-system",
+    "react",
+    "components",
+    "ui",
+    "icons",
+    "tokens",
+    "css"
+  ],
+  "homepage": "https://open-figment-design-system.vercel.app",
+  "bugs": {
+    "url": "https://github.com/iintore/Open-Figment-Design-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iintore/Open-Figment-Design-System.git",
+    "directory": "packages/open-figment"
+  },
+  "license": "MIT",
+  "author": "Tony Lewis MANZI",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react/index.d.ts",
+        "default": "./dist/react/index.js"
+      },
+      "require": {
+        "types": "./dist/react/index.d.cts",
+        "default": "./dist/react/index.cjs"
+      }
+    },
+    "./icons": {
+      "import": {
+        "types": "./dist/icons/index.d.ts",
+        "default": "./dist/icons/index.js"
+      },
+      "require": {
+        "types": "./dist/icons/index.d.cts",
+        "default": "./dist/icons/index.cjs"
+      }
+    },
+    "./tokens": {
+      "import": {
+        "types": "./dist/tokens/index.d.ts",
+        "default": "./dist/tokens/index.js"
+      },
+      "require": {
+        "types": "./dist/tokens/index.d.cts",
+        "default": "./dist/tokens/index.cjs"
+      }
+    },
+    "./button": {
+      "import": {
+        "types": "./dist/button/index.d.ts",
+        "default": "./dist/button/index.js"
+      },
+      "require": {
+        "types": "./dist/button/index.d.cts",
+        "default": "./dist/button/index.cjs"
+      }
+    },
+    "./icon-button": {
+      "import": {
+        "types": "./dist/icon-button/index.d.ts",
+        "default": "./dist/icon-button/index.js"
+      },
+      "require": {
+        "types": "./dist/icon-button/index.d.cts",
+        "default": "./dist/icon-button/index.cjs"
+      }
+    },
+    "./tool-button": {
+      "import": {
+        "types": "./dist/tool-button/index.d.ts",
+        "default": "./dist/tool-button/index.js"
+      },
+      "require": {
+        "types": "./dist/tool-button/index.d.cts",
+        "default": "./dist/tool-button/index.cjs"
+      }
+    },
+    "./mode-switch": {
+      "import": {
+        "types": "./dist/mode-switch/index.d.ts",
+        "default": "./dist/mode-switch/index.js"
+      },
+      "require": {
+        "types": "./dist/mode-switch/index.d.cts",
+        "default": "./dist/mode-switch/index.cjs"
+      }
+    },
+    "./product-pill": {
+      "import": {
+        "types": "./dist/product-pill/index.d.ts",
+        "default": "./dist/product-pill/index.js"
+      },
+      "require": {
+        "types": "./dist/product-pill/index.d.cts",
+        "default": "./dist/product-pill/index.cjs"
+      }
+    },
+    "./star-button": {
+      "import": {
+        "types": "./dist/star-button/index.d.ts",
+        "default": "./dist/star-button/index.js"
+      },
+      "require": {
+        "types": "./dist/star-button/index.d.cts",
+        "default": "./dist/star-button/index.cjs"
+      }
+    },
+    "./number-field": {
+      "import": {
+        "types": "./dist/number-field/index.d.ts",
+        "default": "./dist/number-field/index.js"
+      },
+      "require": {
+        "types": "./dist/number-field/index.d.cts",
+        "default": "./dist/number-field/index.cjs"
+      }
+    },
+    "./text-field": {
+      "import": {
+        "types": "./dist/text-field/index.d.ts",
+        "default": "./dist/text-field/index.js"
+      },
+      "require": {
+        "types": "./dist/text-field/index.d.cts",
+        "default": "./dist/text-field/index.cjs"
+      }
+    },
+    "./select": {
+      "import": {
+        "types": "./dist/select/index.d.ts",
+        "default": "./dist/select/index.js"
+      },
+      "require": {
+        "types": "./dist/select/index.d.cts",
+        "default": "./dist/select/index.cjs"
+      }
+    },
+    "./segmented-control": {
+      "import": {
+        "types": "./dist/segmented-control/index.d.ts",
+        "default": "./dist/segmented-control/index.js"
+      },
+      "require": {
+        "types": "./dist/segmented-control/index.d.cts",
+        "default": "./dist/segmented-control/index.cjs"
+      }
+    },
+    "./checkbox": {
+      "import": {
+        "types": "./dist/checkbox/index.d.ts",
+        "default": "./dist/checkbox/index.js"
+      },
+      "require": {
+        "types": "./dist/checkbox/index.d.cts",
+        "default": "./dist/checkbox/index.cjs"
+      }
+    },
+    "./search-field": {
+      "import": {
+        "types": "./dist/search-field/index.d.ts",
+        "default": "./dist/search-field/index.js"
+      },
+      "require": {
+        "types": "./dist/search-field/index.d.cts",
+        "default": "./dist/search-field/index.cjs"
+      }
+    },
+    "./paint-row": {
+      "import": {
+        "types": "./dist/paint-row/index.d.ts",
+        "default": "./dist/paint-row/index.js"
+      },
+      "require": {
+        "types": "./dist/paint-row/index.d.cts",
+        "default": "./dist/paint-row/index.cjs"
+      }
+    },
+    "./tab": {
+      "import": {
+        "types": "./dist/tab/index.d.ts",
+        "default": "./dist/tab/index.js"
+      },
+      "require": {
+        "types": "./dist/tab/index.d.cts",
+        "default": "./dist/tab/index.cjs"
+      }
+    },
+    "./rail-item": {
+      "import": {
+        "types": "./dist/rail-item/index.d.ts",
+        "default": "./dist/rail-item/index.js"
+      },
+      "require": {
+        "types": "./dist/rail-item/index.d.cts",
+        "default": "./dist/rail-item/index.cjs"
+      }
+    },
+    "./page-row": {
+      "import": {
+        "types": "./dist/page-row/index.d.ts",
+        "default": "./dist/page-row/index.js"
+      },
+      "require": {
+        "types": "./dist/page-row/index.d.cts",
+        "default": "./dist/page-row/index.cjs"
+      }
+    },
+    "./layer-row": {
+      "import": {
+        "types": "./dist/layer-row/index.d.ts",
+        "default": "./dist/layer-row/index.js"
+      },
+      "require": {
+        "types": "./dist/layer-row/index.d.cts",
+        "default": "./dist/layer-row/index.cjs"
+      }
+    },
+    "./menu": {
+      "import": {
+        "types": "./dist/menu/index.d.ts",
+        "default": "./dist/menu/index.js"
+      },
+      "require": {
+        "types": "./dist/menu/index.d.cts",
+        "default": "./dist/menu/index.cjs"
+      }
+    },
+    "./tooltip": {
+      "import": {
+        "types": "./dist/tooltip/index.d.ts",
+        "default": "./dist/tooltip/index.js"
+      },
+      "require": {
+        "types": "./dist/tooltip/index.d.cts",
+        "default": "./dist/tooltip/index.cjs"
+      }
+    },
+    "./toast": {
+      "import": {
+        "types": "./dist/toast/index.d.ts",
+        "default": "./dist/toast/index.js"
+      },
+      "require": {
+        "types": "./dist/toast/index.d.cts",
+        "default": "./dist/toast/index.cjs"
+      }
+    },
+    "./popover": {
+      "import": {
+        "types": "./dist/popover/index.d.ts",
+        "default": "./dist/popover/index.js"
+      },
+      "require": {
+        "types": "./dist/popover/index.d.cts",
+        "default": "./dist/popover/index.cjs"
+      }
+    },
+    "./dialog": {
+      "import": {
+        "types": "./dist/dialog/index.d.ts",
+        "default": "./dist/dialog/index.js"
+      },
+      "require": {
+        "types": "./dist/dialog/index.d.cts",
+        "default": "./dist/dialog/index.cjs"
+      }
+    },
+    "./drawer": {
+      "import": {
+        "types": "./dist/drawer/index.d.ts",
+        "default": "./dist/drawer/index.js"
+      },
+      "require": {
+        "types": "./dist/drawer/index.d.cts",
+        "default": "./dist/drawer/index.cjs"
+      }
+    },
+    "./badge": {
+      "import": {
+        "types": "./dist/badge/index.d.ts",
+        "default": "./dist/badge/index.js"
+      },
+      "require": {
+        "types": "./dist/badge/index.d.cts",
+        "default": "./dist/badge/index.cjs"
+      }
+    },
+    "./avatar": {
+      "import": {
+        "types": "./dist/avatar/index.d.ts",
+        "default": "./dist/avatar/index.js"
+      },
+      "require": {
+        "types": "./dist/avatar/index.d.cts",
+        "default": "./dist/avatar/index.cjs"
+      }
+    },
+    "./property-section": {
+      "import": {
+        "types": "./dist/property-section/index.d.ts",
+        "default": "./dist/property-section/index.js"
+      },
+      "require": {
+        "types": "./dist/property-section/index.d.cts",
+        "default": "./dist/property-section/index.cjs"
+      }
+    },
+    "./type-header": {
+      "import": {
+        "types": "./dist/type-header/index.d.ts",
+        "default": "./dist/type-header/index.js"
+      },
+      "require": {
+        "types": "./dist/type-header/index.d.cts",
+        "default": "./dist/type-header/index.cjs"
+      }
+    },
+    "./file-card": {
+      "import": {
+        "types": "./dist/file-card/index.d.ts",
+        "default": "./dist/file-card/index.js"
+      },
+      "require": {
+        "types": "./dist/file-card/index.d.cts",
+        "default": "./dist/file-card/index.cjs"
+      }
+    },
+    "./file-row": {
+      "import": {
+        "types": "./dist/file-row/index.d.ts",
+        "default": "./dist/file-row/index.js"
+      },
+      "require": {
+        "types": "./dist/file-row/index.d.cts",
+        "default": "./dist/file-row/index.cjs"
+      }
+    },
+    "./resource-card": {
+      "import": {
+        "types": "./dist/resource-card/index.d.ts",
+        "default": "./dist/resource-card/index.js"
+      },
+      "require": {
+        "types": "./dist/resource-card/index.d.cts",
+        "default": "./dist/resource-card/index.cjs"
+      }
+    },
+    "./code-block": {
+      "import": {
+        "types": "./dist/code-block/index.d.ts",
+        "default": "./dist/code-block/index.js"
+      },
+      "require": {
+        "types": "./dist/code-block/index.d.cts",
+        "default": "./dist/code-block/index.cjs"
+      }
+    },
+    "./styles.css": {
+      "import": {
+        "types": "./css/styles.css.d.ts",
+        "default": "./css/styles.css"
+      },
+      "require": {
+        "types": "./css/styles.css.d.cts",
+        "default": "./css/styles.css"
+      }
+    },
+    "./components.css": {
+      "import": {
+        "types": "./css/components.css.d.ts",
+        "default": "./css/components.css"
+      },
+      "require": {
+        "types": "./css/components.css.d.cts",
+        "default": "./css/components.css"
+      }
+    },
+    "./tokens.css": {
+      "import": {
+        "types": "./css/tokens.css.d.ts",
+        "default": "./css/tokens.css"
+      },
+      "require": {
+        "types": "./css/tokens.css.d.cts",
+        "default": "./css/tokens.css"
+      }
+    },
+    "./base.css": {
+      "import": {
+        "types": "./css/base.css.d.ts",
+        "default": "./css/base.css"
+      },
+      "require": {
+        "types": "./css/base.css.d.cts",
+        "default": "./css/base.css"
+      }
+    },
+    "./button/styles.css": {
+      "import": {
+        "types": "./css/button.css.d.ts",
+        "default": "./css/button.css"
+      },
+      "require": {
+        "types": "./css/button.css.d.cts",
+        "default": "./css/button.css"
+      }
+    },
+    "./icon-button/styles.css": {
+      "import": {
+        "types": "./css/icon-button.css.d.ts",
+        "default": "./css/icon-button.css"
+      },
+      "require": {
+        "types": "./css/icon-button.css.d.cts",
+        "default": "./css/icon-button.css"
+      }
+    },
+    "./tool-button/styles.css": {
+      "import": {
+        "types": "./css/tool-button.css.d.ts",
+        "default": "./css/tool-button.css"
+      },
+      "require": {
+        "types": "./css/tool-button.css.d.cts",
+        "default": "./css/tool-button.css"
+      }
+    },
+    "./mode-switch/styles.css": {
+      "import": {
+        "types": "./css/mode-switch.css.d.ts",
+        "default": "./css/mode-switch.css"
+      },
+      "require": {
+        "types": "./css/mode-switch.css.d.cts",
+        "default": "./css/mode-switch.css"
+      }
+    },
+    "./product-pill/styles.css": {
+      "import": {
+        "types": "./css/product-pill.css.d.ts",
+        "default": "./css/product-pill.css"
+      },
+      "require": {
+        "types": "./css/product-pill.css.d.cts",
+        "default": "./css/product-pill.css"
+      }
+    },
+    "./star-button/styles.css": {
+      "import": {
+        "types": "./css/star-button.css.d.ts",
+        "default": "./css/star-button.css"
+      },
+      "require": {
+        "types": "./css/star-button.css.d.cts",
+        "default": "./css/star-button.css"
+      }
+    },
+    "./number-field/styles.css": {
+      "import": {
+        "types": "./css/number-field.css.d.ts",
+        "default": "./css/number-field.css"
+      },
+      "require": {
+        "types": "./css/number-field.css.d.cts",
+        "default": "./css/number-field.css"
+      }
+    },
+    "./text-field/styles.css": {
+      "import": {
+        "types": "./css/text-field.css.d.ts",
+        "default": "./css/text-field.css"
+      },
+      "require": {
+        "types": "./css/text-field.css.d.cts",
+        "default": "./css/text-field.css"
+      }
+    },
+    "./select/styles.css": {
+      "import": {
+        "types": "./css/select.css.d.ts",
+        "default": "./css/select.css"
+      },
+      "require": {
+        "types": "./css/select.css.d.cts",
+        "default": "./css/select.css"
+      }
+    },
+    "./segmented-control/styles.css": {
+      "import": {
+        "types": "./css/segmented-control.css.d.ts",
+        "default": "./css/segmented-control.css"
+      },
+      "require": {
+        "types": "./css/segmented-control.css.d.cts",
+        "default": "./css/segmented-control.css"
+      }
+    },
+    "./checkbox/styles.css": {
+      "import": {
+        "types": "./css/checkbox.css.d.ts",
+        "default": "./css/checkbox.css"
+      },
+      "require": {
+        "types": "./css/checkbox.css.d.cts",
+        "default": "./css/checkbox.css"
+      }
+    },
+    "./search-field/styles.css": {
+      "import": {
+        "types": "./css/search-field.css.d.ts",
+        "default": "./css/search-field.css"
+      },
+      "require": {
+        "types": "./css/search-field.css.d.cts",
+        "default": "./css/search-field.css"
+      }
+    },
+    "./paint-row/styles.css": {
+      "import": {
+        "types": "./css/paint-row.css.d.ts",
+        "default": "./css/paint-row.css"
+      },
+      "require": {
+        "types": "./css/paint-row.css.d.cts",
+        "default": "./css/paint-row.css"
+      }
+    },
+    "./tab/styles.css": {
+      "import": {
+        "types": "./css/tab.css.d.ts",
+        "default": "./css/tab.css"
+      },
+      "require": {
+        "types": "./css/tab.css.d.cts",
+        "default": "./css/tab.css"
+      }
+    },
+    "./rail-item/styles.css": {
+      "import": {
+        "types": "./css/rail-item.css.d.ts",
+        "default": "./css/rail-item.css"
+      },
+      "require": {
+        "types": "./css/rail-item.css.d.cts",
+        "default": "./css/rail-item.css"
+      }
+    },
+    "./page-row/styles.css": {
+      "import": {
+        "types": "./css/page-row.css.d.ts",
+        "default": "./css/page-row.css"
+      },
+      "require": {
+        "types": "./css/page-row.css.d.cts",
+        "default": "./css/page-row.css"
+      }
+    },
+    "./layer-row/styles.css": {
+      "import": {
+        "types": "./css/layer-row.css.d.ts",
+        "default": "./css/layer-row.css"
+      },
+      "require": {
+        "types": "./css/layer-row.css.d.cts",
+        "default": "./css/layer-row.css"
+      }
+    },
+    "./menu/styles.css": {
+      "import": {
+        "types": "./css/menu.css.d.ts",
+        "default": "./css/menu.css"
+      },
+      "require": {
+        "types": "./css/menu.css.d.cts",
+        "default": "./css/menu.css"
+      }
+    },
+    "./tooltip/styles.css": {
+      "import": {
+        "types": "./css/tooltip.css.d.ts",
+        "default": "./css/tooltip.css"
+      },
+      "require": {
+        "types": "./css/tooltip.css.d.cts",
+        "default": "./css/tooltip.css"
+      }
+    },
+    "./toast/styles.css": {
+      "import": {
+        "types": "./css/toast.css.d.ts",
+        "default": "./css/toast.css"
+      },
+      "require": {
+        "types": "./css/toast.css.d.cts",
+        "default": "./css/toast.css"
+      }
+    },
+    "./popover/styles.css": {
+      "import": {
+        "types": "./css/popover.css.d.ts",
+        "default": "./css/popover.css"
+      },
+      "require": {
+        "types": "./css/popover.css.d.cts",
+        "default": "./css/popover.css"
+      }
+    },
+    "./dialog/styles.css": {
+      "import": {
+        "types": "./css/dialog.css.d.ts",
+        "default": "./css/dialog.css"
+      },
+      "require": {
+        "types": "./css/dialog.css.d.cts",
+        "default": "./css/dialog.css"
+      }
+    },
+    "./drawer/styles.css": {
+      "import": {
+        "types": "./css/drawer.css.d.ts",
+        "default": "./css/drawer.css"
+      },
+      "require": {
+        "types": "./css/drawer.css.d.cts",
+        "default": "./css/drawer.css"
+      }
+    },
+    "./badge/styles.css": {
+      "import": {
+        "types": "./css/badge.css.d.ts",
+        "default": "./css/badge.css"
+      },
+      "require": {
+        "types": "./css/badge.css.d.cts",
+        "default": "./css/badge.css"
+      }
+    },
+    "./avatar/styles.css": {
+      "import": {
+        "types": "./css/avatar.css.d.ts",
+        "default": "./css/avatar.css"
+      },
+      "require": {
+        "types": "./css/avatar.css.d.cts",
+        "default": "./css/avatar.css"
+      }
+    },
+    "./property-section/styles.css": {
+      "import": {
+        "types": "./css/property-section.css.d.ts",
+        "default": "./css/property-section.css"
+      },
+      "require": {
+        "types": "./css/property-section.css.d.cts",
+        "default": "./css/property-section.css"
+      }
+    },
+    "./type-header/styles.css": {
+      "import": {
+        "types": "./css/type-header.css.d.ts",
+        "default": "./css/type-header.css"
+      },
+      "require": {
+        "types": "./css/type-header.css.d.cts",
+        "default": "./css/type-header.css"
+      }
+    },
+    "./file-card/styles.css": {
+      "import": {
+        "types": "./css/file-card.css.d.ts",
+        "default": "./css/file-card.css"
+      },
+      "require": {
+        "types": "./css/file-card.css.d.cts",
+        "default": "./css/file-card.css"
+      }
+    },
+    "./file-row/styles.css": {
+      "import": {
+        "types": "./css/file-row.css.d.ts",
+        "default": "./css/file-row.css"
+      },
+      "require": {
+        "types": "./css/file-row.css.d.cts",
+        "default": "./css/file-row.css"
+      }
+    },
+    "./resource-card/styles.css": {
+      "import": {
+        "types": "./css/resource-card.css.d.ts",
+        "default": "./css/resource-card.css"
+      },
+      "require": {
+        "types": "./css/resource-card.css.d.cts",
+        "default": "./css/resource-card.css"
+      }
+    },
+    "./code-block/styles.css": {
+      "import": {
+        "types": "./css/code-block.css.d.ts",
+        "default": "./css/code-block.css"
+      },
+      "require": {
+        "types": "./css/code-block.css.d.cts",
+        "default": "./css/code-block.css"
+      }
+    },
+    "./tokens.json": "./tokens.json",
+    "./svg/*": "./svg/*",
+    "./fonts/*": "./css/fonts/*",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "react": [
+        "dist/react/index.d.ts"
+      ],
+      "tokens": [
+        "dist/tokens/index.d.ts"
+      ],
+      "icons": [
+        "dist/icons/index.d.ts"
+      ],
+      "button": [
+        "dist/button/index.d.ts"
+      ],
+      "icon-button": [
+        "dist/icon-button/index.d.ts"
+      ],
+      "tool-button": [
+        "dist/tool-button/index.d.ts"
+      ],
+      "mode-switch": [
+        "dist/mode-switch/index.d.ts"
+      ],
+      "product-pill": [
+        "dist/product-pill/index.d.ts"
+      ],
+      "star-button": [
+        "dist/star-button/index.d.ts"
+      ],
+      "number-field": [
+        "dist/number-field/index.d.ts"
+      ],
+      "text-field": [
+        "dist/text-field/index.d.ts"
+      ],
+      "select": [
+        "dist/select/index.d.ts"
+      ],
+      "segmented-control": [
+        "dist/segmented-control/index.d.ts"
+      ],
+      "checkbox": [
+        "dist/checkbox/index.d.ts"
+      ],
+      "search-field": [
+        "dist/search-field/index.d.ts"
+      ],
+      "paint-row": [
+        "dist/paint-row/index.d.ts"
+      ],
+      "tab": [
+        "dist/tab/index.d.ts"
+      ],
+      "rail-item": [
+        "dist/rail-item/index.d.ts"
+      ],
+      "page-row": [
+        "dist/page-row/index.d.ts"
+      ],
+      "layer-row": [
+        "dist/layer-row/index.d.ts"
+      ],
+      "menu": [
+        "dist/menu/index.d.ts"
+      ],
+      "tooltip": [
+        "dist/tooltip/index.d.ts"
+      ],
+      "toast": [
+        "dist/toast/index.d.ts"
+      ],
+      "popover": [
+        "dist/popover/index.d.ts"
+      ],
+      "dialog": [
+        "dist/dialog/index.d.ts"
+      ],
+      "drawer": [
+        "dist/drawer/index.d.ts"
+      ],
+      "badge": [
+        "dist/badge/index.d.ts"
+      ],
+      "avatar": [
+        "dist/avatar/index.d.ts"
+      ],
+      "property-section": [
+        "dist/property-section/index.d.ts"
+      ],
+      "type-header": [
+        "dist/type-header/index.d.ts"
+      ],
+      "file-card": [
+        "dist/file-card/index.d.ts"
+      ],
+      "file-row": [
+        "dist/file-row/index.d.ts"
+      ],
+      "resource-card": [
+        "dist/resource-card/index.d.ts"
+      ],
+      "code-block": [
+        "dist/code-block/index.d.ts"
+      ],
+      "button/styles.css": [
+        "css/button.css.d.ts"
+      ],
+      "icon-button/styles.css": [
+        "css/icon-button.css.d.ts"
+      ],
+      "tool-button/styles.css": [
+        "css/tool-button.css.d.ts"
+      ],
+      "mode-switch/styles.css": [
+        "css/mode-switch.css.d.ts"
+      ],
+      "product-pill/styles.css": [
+        "css/product-pill.css.d.ts"
+      ],
+      "star-button/styles.css": [
+        "css/star-button.css.d.ts"
+      ],
+      "number-field/styles.css": [
+        "css/number-field.css.d.ts"
+      ],
+      "text-field/styles.css": [
+        "css/text-field.css.d.ts"
+      ],
+      "select/styles.css": [
+        "css/select.css.d.ts"
+      ],
+      "segmented-control/styles.css": [
+        "css/segmented-control.css.d.ts"
+      ],
+      "checkbox/styles.css": [
+        "css/checkbox.css.d.ts"
+      ],
+      "search-field/styles.css": [
+        "css/search-field.css.d.ts"
+      ],
+      "paint-row/styles.css": [
+        "css/paint-row.css.d.ts"
+      ],
+      "tab/styles.css": [
+        "css/tab.css.d.ts"
+      ],
+      "rail-item/styles.css": [
+        "css/rail-item.css.d.ts"
+      ],
+      "page-row/styles.css": [
+        "css/page-row.css.d.ts"
+      ],
+      "layer-row/styles.css": [
+        "css/layer-row.css.d.ts"
+      ],
+      "menu/styles.css": [
+        "css/menu.css.d.ts"
+      ],
+      "tooltip/styles.css": [
+        "css/tooltip.css.d.ts"
+      ],
+      "toast/styles.css": [
+        "css/toast.css.d.ts"
+      ],
+      "popover/styles.css": [
+        "css/popover.css.d.ts"
+      ],
+      "dialog/styles.css": [
+        "css/dialog.css.d.ts"
+      ],
+      "drawer/styles.css": [
+        "css/drawer.css.d.ts"
+      ],
+      "badge/styles.css": [
+        "css/badge.css.d.ts"
+      ],
+      "avatar/styles.css": [
+        "css/avatar.css.d.ts"
+      ],
+      "property-section/styles.css": [
+        "css/property-section.css.d.ts"
+      ],
+      "type-header/styles.css": [
+        "css/type-header.css.d.ts"
+      ],
+      "file-card/styles.css": [
+        "css/file-card.css.d.ts"
+      ],
+      "file-row/styles.css": [
+        "css/file-row.css.d.ts"
+      ],
+      "resource-card/styles.css": [
+        "css/resource-card.css.d.ts"
+      ],
+      "code-block/styles.css": [
+        "css/code-block.css.d.ts"
+      ],
+      "styles.css": [
+        "css/styles.css.d.ts"
+      ],
+      "components.css": [
+        "css/components.css.d.ts"
+      ],
+      "tokens.css": [
+        "css/tokens.css.d.ts"
+      ],
+      "base.css": [
+        "css/base.css.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "css",
+    "svg",
+    "tokens.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

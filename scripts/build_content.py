@@ -225,21 +225,19 @@ PKG_BY_DIR = {c['dir']: c for c in PKG['components']} if PKG else {}
 
 
 def install_md(dir_):
-    """Install and Usage sections for a component published as an npm package."""
+    """Install and Usage sections for a component of the design system's npm package."""
     c = PKG_BY_DIR.get(dir_)
     if not c:
         return None
-    scope = PKG['scope']
-    extra = [] if c['bundlesIcons'] or not c['icons'] else [f'{scope}/icons']
-    imports = [f"import '{scope}/tokens/tokens.css'; // once per app", f"import '{scope}/{dir_}/styles.css';", f"import {{ {', '.join(c['exports'])} }} from '{scope}/{dir_}';"]
+    pkg = PKG['package']
+    imports = [f"import '{pkg}/tokens.css'; // once per app", f"import '{pkg}/{dir_}/styles.css';", f"import {{ {', '.join(c['exports'])} }} from '{pkg}/{dir_}';"]
     if c['icons']:
-        imports.append(f"import {{ {', '.join(c['icons'])} }} from '{scope}/icons';")
+        imports.append(f"import {{ {', '.join(c['icons'])} }} from '{pkg}/icons';")
     if c['iconButton']:
-        imports.append(f"import {{ IconButton }} from '{scope}/icon-button';")
-        extra.append(f'{scope}/icon-button')
+        imports.append(f"import {{ IconButton }} from '{pkg}/icon-button';")
     return (
-        f"Install this component on its own, or get every component from `{scope}/react`.\n\n"
-        f"```install\n{' '.join([f'{scope}/{dir_}', *extra])}\n```\n\n"
+        f"The whole design system is one package. Import this component on its own, as below, or everything from `{pkg}/react`.\n\n"
+        f"```install\n{pkg}\n```\n\n"
         f"```tsx\n" + '\n'.join(imports) + f"\n\n{c['usage']}\n```"
     )
 

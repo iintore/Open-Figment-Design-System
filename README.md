@@ -12,37 +12,28 @@ live previews rendered from the app's real markup and stylesheet.
 
 ## Install
 
-The whole system, or any single component, from npm with npm, pnpm or Yarn. ES modules,
-CommonJS and TypeScript types; React 18 and 19.
+One package for the whole design system, published in the [KrackedUI](https://www.npmjs.com/org/krackedui)
+organisation (every KrackedUI design system is `@krackedui/<design-system>`). ES modules,
+CommonJS and TypeScript types; React 18 and 19; npm, pnpm and Yarn.
 
 ```bash
-npm install @open-figment/react       # or: pnpm add / yarn add
+npm install @krackedui/open-figment       # or: pnpm add / yarn add
 ```
 
 ```tsx
-import '@open-figment/react/styles.css';
-import { Button, Select, IconPlus } from '@open-figment/react';
+// The whole system
+import '@krackedui/open-figment/styles.css';
+import { Button, Select, IconPlus } from '@krackedui/open-figment/react';
+
+// Or one component at a time
+import '@krackedui/open-figment/tokens.css';
+import '@krackedui/open-figment/button/styles.css';
+import { Button } from '@krackedui/open-figment/button';
 ```
 
-One component on its own:
-
-```bash
-npm install @open-figment/button
-```
-
-```tsx
-import '@open-figment/tokens/tokens.css'; // once per app
-import '@open-figment/button/styles.css';
-import { Button } from '@open-figment/button';
-```
-
-| Package | Contents |
-| --- | --- |
-| [`@open-figment/react`](packages/react) | All 31 components, 91 icons and the tokens, one `styles.css` |
-| `@open-figment/<component>` | One component and its `styles.css`: [`button`](packages/button), [`select`](packages/select), [`menu`](packages/menu), [`number-field`](packages/number-field), [`layer-row`](packages/layer-row), [and 26 more](packages) |
-| [`@open-figment/icons`](packages/icons) | 91 icons as React components and SVG files |
-| [`@open-figment/tokens`](packages/tokens) | CSS variables (light and dark), JSON, typed JS, the Inter font |
-| [`@open-figment/styles`](packages/styles) | All component CSS, for non-React use |
+Entry points: `/react`, `/<component>` for each of the 31 components, `/icons`, `/tokens`,
+`/styles.css`, `/<component>/styles.css`, `/tokens.css`, `/tokens.json` and `/svg/<name>.svg`.
+See [packages/open-figment](packages/open-figment) and the docs' **Installation** page.
 
 ## What's inside
 
@@ -67,30 +58,32 @@ npm run build     # static site in dist/
 npm run check     # type-check, lint, tests and build (what CI runs)
 ```
 
-## The packages
+## The package
 
-`packages/` is an npm workspace. Component sources are `packages/<name>/src/index.tsx`; the
-tokens, icons, styles and react packages, every `styles.css` and the compiled `dist/` folders are
-generated from the same sources the docs use.
+`packages/open-figment/` is the npm package (an npm workspace). Component sources are
+`packages/open-figment/src/<component>/index.tsx`; the tokens, icons and react modules, the CSS
+and the compiled `dist/` are generated from the same sources the docs use. A new design system
+goes next to it as `packages/<design-system>/`.
 
 ```bash
-npm run packages:build     # generate and compile all 35 packages (ESM, CJS, types, CSS)
-npm run packages:test      # render every component and check its markup, CSS and exports
-npm run packages:check     # publint + Are the Types Wrong on every package, pack tarballs
-node scripts/packages/install-test.mjs   # install the tarballs with npm, pnpm, Yarn 1 and 4,
+npm run packages:build     # generate and compile (ESM, CJS, types, CSS) into packages/open-figment
+npm run packages:test      # render every component; check markup, CSS and every entry point
+npm run packages:check     # publint + Are the Types Wrong (all resolution modes), pack the tarball
+node scripts/packages/install-test.mjs   # install the tarball with npm, pnpm, Yarn 1 and 4,
                                          # build an app with each and test it in Chromium
 ```
 
-Each component's `styles.css` holds only the rules for its own classes (plus those of components
-it renders), with element defaults scoped to them, so nothing leaks into the rest of your app.
+Each component's stylesheet holds only the rules for its own classes (plus those of components it
+renders), with element defaults scoped to them, so nothing leaks into the rest of your app.
 
 ### Releasing
 
 1. `npm run packages:version -- 1.2.0` and `npm run packages:build`.
 2. Commit, then `git tag v1.2.0 && git push --follow-tags`.
-3. The **Release packages** workflow tests everything again and publishes all packages to npm
-   with provenance. It needs an `NPM_TOKEN` secret with publish rights to the `@open-figment`
-   scope. (To publish from your machine instead: `npm login`, then `npm run release`.)
+3. The **Release packages** workflow tests everything again and publishes
+   `@krackedui/open-figment` to npm with provenance. It needs an `NPM_TOKEN` secret with publish
+   rights to the `krackedui` organisation. (From your machine instead: `npm login`, then
+   `npm run release`.)
 
 ## How the content is made
 

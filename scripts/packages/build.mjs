@@ -1,25 +1,31 @@
-// Builds every npm package under packages/:
+// Builds the design system's npm package, @krackedui/open-figment (packages/open-figment):
+// one package per design system, with a subpath for every part of it.
 //
-//   @open-figment/tokens      tokens.css (variables + Inter), base.css, tokens.json, typed JS
-//   @open-figment/icons       91 React icon components + SVG files
-//   @open-figment/<component> 31 component packages: ESM + CJS + types, and their own styles.css
-//   @open-figment/styles      all component CSS (and per-component files) for non-React use
-//   @open-figment/react       every component, icon and token from one package, one stylesheet
+//   @krackedui/open-figment            everything (same as /react)
+//   @krackedui/open-figment/react      every component, icon and token
+//   @krackedui/open-figment/<component>  one component (button, select, menu, …)
+//   @krackedui/open-figment/icons      91 React icons (SVG files under /svg/*)
+//   @krackedui/open-figment/tokens     typed tokens (CSS: /tokens.css, JSON: /tokens.json)
+//   CSS: /styles.css (tokens + all components), /components.css, /<component>/styles.css,
+//        /tokens.css, /base.css
 //
-// Sources: packages/<component>/src/index.tsx (hand-written), source/tokens.json,
-// source/icons.json and public/ds/{tokens,bundle}.css (generated from the app by
-// scripts/build_content.py). Run: npm run packages:build
+// Every module ships ESM, CommonJS and types. Sources: packages/open-figment/src/<component>/
+// index.tsx (hand-written), source/tokens.json, source/icons.json and public/ds/{tokens,bundle}.css
+// (generated from the app by scripts/build_content.py). Run: npm run packages:build
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { SCOPE, components } from './manifest.mjs';
+import { PACKAGE, SYSTEM, components } from './manifest.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const PKGS = path.join(ROOT, 'packages');
+const PKG = path.join(PKGS, SYSTEM.dir);
+const SRC = path.join(PKG, 'src');
+const CSS = path.join(PKG, 'css');
 const BUILD = path.join(ROOT, '.packages-build');
 const { version } = JSON.parse(fs.readFileSync(path.join(PKGS, 'version.json'), 'utf8'));
 const rootPkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
-const DOCS = 'https://open-figment-design-system.vercel.app';
+const DOCS = SYSTEM.docs;
 const REPO = 'https://github.com/iintore/Open-Figment-Design-System';
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const write = (p, s) => {
@@ -171,70 +177,38 @@ function scopedReset(classes) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// Shared package files
+// Package metadata helpers
 // ---------------------------------------------------------------------------------------------
-const LICENSE = read('LICENSE');
-const install = (names) => {
-  const list = names.join(' ');
-  return '```bash\nnpm install ' + list + '\n```\n\n```bash\npnpm add ' + list + '\n```\n\n```bash\nyarn add ' + list + '\n```';
+const install = (name) => '```bash\nnpm install ' + name + '\n```\n\n```bash\npnpm add ' + name + '\n```\n\n```bash\nyarn add ' + name + '\n```';
+const decl = '// Side-effect stylesheet import.\nexport {};\n';
+/** A CSS export with empty declarations, so `import 'pkg/x.css'` type-checks without bundler types. */
+const cssEntry = (rel) => {
+  write(path.join(PKG, rel + '.d.ts'), decl);
+  write(path.join(PKG, rel + '.d.cts'), decl);
+  return { import: { types: `./${rel}.d.ts`, default: `./${rel}` }, require: { types: `./${rel}.d.cts`, default: `./${rel}` } };
 };
-function packageJson(dir, { name, description, keywords = [], deps = {}, peers = {}, exports, files, type = 'module', main = true, extra = {} }) {
-  const pkg = {
-    name,
-    version,
-    description,
-    keywords: ['open-figment', 'design-system', ...keywords],
-    homepage: extra.homepage ?? DOCS,
-    bugs: { url: `${REPO}/issues` },
-    repository: { type: 'git', url: `git+${REPO}.git`, directory: `packages/${dir}` },
-    license: 'MIT',
-    author: rootPkg.author,
-    type,
-    engines: { node: '>=18' },
-    sideEffects: ['*.css'],
-    ...(main ? { main: './dist/index.cjs', module: './dist/index.js', types: './dist/index.d.ts' } : {}),
-    exports,
-    files: [...files, 'README.md', 'LICENSE'],
-    ...(Object.keys(deps).length ? { dependencies: deps } : {}),
-    ...(Object.keys(peers).length ? { peerDependencies: peers } : {}),
-    publishConfig: { access: 'public' },
-  };
-  write(path.join(PKGS, dir, 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
-  write(path.join(PKGS, dir, 'LICENSE'), LICENSE);
-}
-const jsExports = (more = {}) => ({
-  '.': {
-    import: { types: './dist/index.d.ts', default: './dist/index.js' },
-    require: { types: './dist/index.d.cts', default: './dist/index.cjs' },
-  },
-  ...more,
-  './package.json': './package.json',
-});
-
-/** A CSS export with an empty declaration file, so `import 'pkg/x.css'` type-checks without bundler types. */
-const cssEntry = (dir, file) => {
-  const decl = '// Side-effect stylesheet import.\nexport {};\n';
-  write(path.join(PKGS, dir, file + '.d.ts'), decl);
-  write(path.join(PKGS, dir, file + '.d.cts'), decl);
-  return { import: { types: `./${file}.d.ts`, default: `./${file}` }, require: { types: `./${file}.d.cts`, default: `./${file}` } };
+const jsEntry = (mod) => {
+  const base = mod ? `./dist/${mod}/index` : './dist/index';
+  return { import: { types: `${base}.d.ts`, default: `${base}.js` }, require: { types: `${base}.d.cts`, default: `${base}.cjs` } };
 };
 
+fs.rmSync(path.join(PKG, 'dist'), { recursive: true, force: true });
+fs.rmSync(CSS, { recursive: true, force: true });
+fs.rmSync(path.join(PKG, 'svg'), { recursive: true, force: true });
+
 // ---------------------------------------------------------------------------------------------
-// 1. @open-figment/tokens
+// 1. Tokens: /tokens (typed JS), /tokens.css, /base.css, /tokens.json, fonts
 // ---------------------------------------------------------------------------------------------
 {
-  const dir = path.join(PKGS, 'tokens');
   const typeVars = pick(bundle, (s) => s === ':root' || s === ':host');
-  write(path.join(dir, 'tokens.css'), `/* Open Figment tokens: colour (light and dark), type, spacing, radius, shadow, and the Inter font.
+  write(path.join(CSS, 'tokens.css'), `/* ${SYSTEM.title} tokens: colour (light and dark), type, spacing, radius, shadow, and the Inter font.
    Dark theme: set data-theme="dark" on <html> (or any container). */\n` + read('public/ds/tokens.css').replace(/^\/\*.*?\*\/\n/s, '') + '\n' + typeVars.join('\n\n') + '\n');
-  for (const f of fs.readdirSync(path.join(ROOT, 'public/ds/fonts'))) {
-    fs.mkdirSync(path.join(dir, 'fonts'), { recursive: true });
-    fs.copyFileSync(path.join(ROOT, 'public/ds/fonts', f), path.join(dir, 'fonts', f));
-  }
-  fs.copyFileSync(path.join(ROOT, 'licenses/Inter-OFL-1.1.txt'), path.join(dir, 'fonts', 'OFL.txt'));
+  fs.mkdirSync(path.join(CSS, 'fonts'), { recursive: true });
+  for (const f of fs.readdirSync(path.join(ROOT, 'public/ds/fonts'))) fs.copyFileSync(path.join(ROOT, 'public/ds/fonts', f), path.join(CSS, 'fonts', f));
+  fs.copyFileSync(path.join(ROOT, 'licenses/Inter-OFL-1.1.txt'), path.join(CSS, 'fonts', 'OFL.txt'));
   write(
-    path.join(dir, 'base.css'),
-    `/* Optional page defaults for an app built entirely with Open Figment: the 11px interface type,
+    path.join(CSS, 'base.css'),
+    `/* Optional page defaults for an app built entirely with ${SYSTEM.title}: the 11px interface type,
    colours and box sizing on the whole document. Components don't need this file. */
 *,
 *::before,
@@ -259,28 +233,16 @@ kbd {
 `,
   );
   const json = JSON.parse(read('source/tokens.json'));
-  write(path.join(dir, 'tokens.json'), JSON.stringify(json, null, 2) + '\n');
-  write(path.join(dir, 'src', 'index.ts'), `// Generated by scripts/packages/build.mjs from source/tokens.json.\n/** Every Open Figment token: colour (light and dark), type, spacing, radius and shadow. */\nexport const tokens = ${JSON.stringify(json, null, 2)} as const;\n\nexport type Tokens = typeof tokens;\n\n/** \`var(--name)\` for a CSS variable token, e.g. \`cssVar('color-bg-brand')\`. */\nexport const cssVar = (name: string) => \`var(--\${name})\`;\n`);
-  packageJson('tokens', {
-    name: `${SCOPE}/tokens`,
-    description: 'Open Figment design tokens: CSS variables (light and dark), JSON and typed JS, with the Inter font.',
-    keywords: ['tokens', 'css-variables', 'theme'],
-    exports: jsExports({ './tokens.css': cssEntry('tokens', 'tokens.css'), './base.css': cssEntry('tokens', 'base.css'), './tokens.json': './tokens.json', './fonts/*': './fonts/*' }),
-    files: ['dist', 'tokens.css', 'base.css', '*.css.d.ts', '*.css.d.cts', 'tokens.json', 'fonts'],
-  });
-  write(
-    path.join(dir, 'README.md'),
-    `# ${SCOPE}/tokens\n\nThe Open Figment design tokens: colour for light and dark themes, the type scale, spacing, radius and shadow, as CSS variables, JSON and typed JavaScript. Ships the Inter variable font (OFL 1.1).\n\n## Install\n\n${install([`${SCOPE}/tokens`])}\n\n## Use\n\n\`\`\`ts\nimport '${SCOPE}/tokens/tokens.css'; // CSS variables and the font, once per app\nimport '${SCOPE}/tokens/base.css'; // optional: page defaults for a full Open Figment UI\n\nimport { tokens, cssVar } from '${SCOPE}/tokens';\ntokens.color; // every colour token\ncssVar('color-bg-brand'); // "var(--color-bg-brand)"\n\`\`\`\n\nDark theme: set \`data-theme="dark"\` on \`<html>\` (or on any container).\n\nDocs: ${DOCS}/foundations/color\n`,
-  );
+  write(path.join(PKG, 'tokens.json'), JSON.stringify(json, null, 2) + '\n');
+  write(path.join(SRC, 'tokens', 'index.ts'), `// Generated by scripts/packages/build.mjs from source/tokens.json.\n/** Every ${SYSTEM.title} token: colour (light and dark), type, spacing, radius and shadow. */\nexport const tokens = ${JSON.stringify(json, null, 2)} as const;\n\nexport type Tokens = typeof tokens;\n\n/** \`var(--name)\` for a CSS variable token, e.g. \`cssVar('color-bg-brand')\`. */\nexport const cssVar = (name: string) => \`var(--\${name})\`;\n`);
   log('tokens');
 }
 
 // ---------------------------------------------------------------------------------------------
-// 2. @open-figment/icons
+// 2. Icons: /icons (React), /svg/*
 // ---------------------------------------------------------------------------------------------
 const icons = JSON.parse(read('source/icons.json'));
 {
-  const dir = path.join(PKGS, 'icons');
   const ATTR = { 'stroke-width': 'strokeWidth', 'stroke-linecap': 'strokeLinecap', 'stroke-linejoin': 'strokeLinejoin', viewbox: 'viewBox' };
   const rows = [];
   const names = [];
@@ -293,10 +255,10 @@ const icons = JSON.parse(read('source/icons.json'));
     const Comp = 'Icon' + pascal(name);
     names.push([name, Comp]);
     rows.push(`/** The \`${name}\` icon. */\nexport const ${Comp} = /*#__PURE__*/ icon('${Comp}', ${size}, ${JSON.stringify(attrs)}, ${JSON.stringify(m[2])});`);
-    write(path.join(dir, 'svg', `${name}.svg`), svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"').replace(' aria-hidden="true"', ''));
+    write(path.join(PKG, 'svg', `${name}.svg`), svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"').replace(' aria-hidden="true"', ''));
   }
   write(
-    path.join(dir, 'src', 'index.tsx'),
+    path.join(SRC, 'icons', 'index.tsx'),
     `// Generated by scripts/packages/build.mjs from source/icons.json (the app's icon set).
 import type { JSX, SVGProps } from 'react';
 
@@ -344,23 +306,11 @@ export function Icon({ name, ...props }: IconProps & { name: IconName }) {
 }
 `,
   );
-  packageJson('icons', {
-    name: `${SCOPE}/icons`,
-    description: `The Open Figment icon set: ${names.length} outline icons as React components and SVG files.`,
-    keywords: ['icons', 'react', 'svg'],
-    peers: { react: '>=18' },
-    exports: jsExports({ './svg/*': './svg/*' }),
-    files: ['dist', 'svg'],
-  });
-  write(
-    path.join(dir, 'README.md'),
-    `# ${SCOPE}/icons\n\nThe Open Figment icon set: ${names.length} outline icons drawn to one spec (24px grid, 1px round strokes, 12px live area), as tree-shakable React components and plain SVG files. Icons use \`currentColor\`.\n\n## Install\n\n${install([`${SCOPE}/icons`])}\n\n## Use\n\n\`\`\`tsx\nimport { IconPlus, IconFrame, Icon } from '${SCOPE}/icons';\n\n<IconPlus />\n<IconFrame size={16} title="Frame" />\n<Icon name="chevronDown" />\n\`\`\`\n\nSVG files: \`${SCOPE}/icons/svg/<name>.svg\`.\n\n## Icons\n\n${names.map(([n, C]) => `\`${C}\``).join(' · ')}\n\nDocs: ${DOCS}/foundations/iconography\n`,
-  );
   log('icons', names.length);
 }
 
 // ---------------------------------------------------------------------------------------------
-// 3. Component packages
+// 3. Components: /<component> and /<component>/styles.css; /components.css, /styles.css
 // ---------------------------------------------------------------------------------------------
 const content = JSON.parse(read('src/content/content.json'));
 const byDir = Object.fromEntries(components.map((c) => [c.dir, c]));
@@ -369,45 +319,27 @@ const allClasses = (c, seen = new Set()) => {
   seen.add(c.dir);
   return [...c.classes, ...(c.deps ?? []).flatMap((d) => allClasses(byDir[d], seen))];
 };
-const cssOut = {};
+const exportsMap = { '.': jsEntry(''), './react': jsEntry('react'), './icons': jsEntry('icons'), './tokens': jsEntry('tokens') };
+const cssMap = {};
 for (const c of components) {
-  const dir = path.join(PKGS, c.dir);
-  const src = fs.readFileSync(path.join(dir, 'src', 'index.tsx'), 'utf8');
   const page = content.pages[`components/${c.dir}`];
   const title = page?.title ?? pascal(c.dir);
-  const description = page?.lead?.replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1').replace(/`([^`]+)`/g, '$1') ?? `The Open Figment ${title} component.`;
   const classes = [...new Set(allClasses(c))];
   const rules = cssFor(classes);
   if (!rules.length) throw new Error(`no CSS found for ${c.dir}`);
-  const css = `/* ${SCOPE}/${c.dir}: ${title}. Needs ${SCOPE}/tokens/tokens.css loaded once in your app. */\n\n${scopedReset(classes)}\n\n${rules.join('\n\n')}\n`;
-  cssOut[c.dir] = { own: cssFor(c.classes), classes: c.classes };
-  write(path.join(dir, 'styles.css'), css);
-  const usesIcons = src.includes(`'${SCOPE}/icons'`);
-  const deps = { [`${SCOPE}/tokens`]: `^${version}` };
-  if (usesIcons) deps[`${SCOPE}/icons`] = `^${version}`;
-  for (const d of c.deps ?? []) deps[`${SCOPE}/${d}`] = `^${version}`;
-  const peers = { react: '>=18' };
-  if (src.includes("'react-dom'")) peers['react-dom'] = '>=18';
-  packageJson(c.dir, {
-    name: `${SCOPE}/${c.dir}`,
-    description,
-    keywords: ['react', 'component', c.dir, c.group.toLowerCase()],
-    deps,
-    peers,
-    exports: jsExports({ './styles.css': cssEntry(c.dir, 'styles.css') }),
-    files: ['dist', 'styles.css', '*.css.d.ts', '*.css.d.cts'],
-    extra: { homepage: `${DOCS}/components/${c.dir}` },
-  });
-  const iconImports = [...c.usage.matchAll(/<(Icon[A-Z]\w*)/g)].map((m) => m[1]);
-  const needIcons = iconImports.length > 0;
-  const usageImports = [`import { ${c.exports.filter((e) => c.usage.includes(e) || e === c.exports[0]).join(', ')} } from '${SCOPE}/${c.dir}';`];
-  if (needIcons) usageImports.push(`import { ${[...new Set(iconImports)].join(', ')} } from '${SCOPE}/icons';`);
-  if (c.usage.includes('<IconButton') && c.dir !== 'icon-button') usageImports.push(`import { IconButton } from '${SCOPE}/icon-button';`);
-  write(
-    path.join(dir, 'README.md'),
-    `# ${SCOPE}/${c.dir}\n\n${description}\n\nPart of the [Open Figment design system](${DOCS}). Exports: ${c.exports.map((e) => `\`${e}\``).join(', ')}${c.types ? `, types ${c.types.map((t) => `\`${t}\``).join(', ')}` : ''}.\n\n## Install\n\n${install([`${SCOPE}/${c.dir}`, ...(needIcons && !usesIcons ? [`${SCOPE}/icons`] : [])])}\n\n## Use\n\n\`\`\`tsx\nimport '${SCOPE}/tokens/tokens.css'; // once per app\nimport '${SCOPE}/${c.dir}/styles.css';\n${usageImports.join('\n')}\n\n${c.usage}\n\`\`\`\n\nEvery prop is typed and documented in the editor. Full reference, states and rules: ${DOCS}/components/${c.dir}\n\n## License\n\nMIT\n`,
-  );
+  write(path.join(CSS, `${c.dir}.css`), `/* ${PACKAGE}/${c.dir}/styles.css: ${title}. Needs ${PACKAGE}/tokens.css loaded once in your app. */\n\n${scopedReset(classes)}\n\n${rules.join('\n\n')}\n`);
+  exportsMap[`./${c.dir}`] = jsEntry(c.dir);
+  cssMap[`./${c.dir}/styles.css`] = cssEntry(`css/${c.dir}.css`);
 }
+const allRoots = [...new Set(components.flatMap((c) => c.classes))];
+const allCss = `${scopedReset(allRoots)}\n\n${cssFor(allRoots).join('\n\n')}\n`;
+write(path.join(CSS, 'components.css'), `/* ${PACKAGE}/components.css: every component's CSS, without tokens (load ${PACKAGE}/tokens.css yourself). */\n\n${allCss}`);
+write(path.join(CSS, 'styles.css'), `/* ${PACKAGE}/styles.css: tokens, the Inter font and every component's CSS. Import once. */\n@import url('./tokens.css');\n\n${allCss}`);
+write(
+  path.join(SRC, 'react', 'index.ts'),
+  [`// Generated by scripts/packages/build.mjs: the whole ${SYSTEM.title} design system in one import.`, `export * from '../tokens/index.js';`, `export * from '../icons/index.js';`, ...components.map((c) => `export * from '../${c.dir}/index.js';`)].join('\n') + '\n',
+);
+write(path.join(SRC, 'index.ts'), `// Generated by scripts/packages/build.mjs: the package root is the whole system (same as /react).\nexport * from './react/index.js';\n`);
 log('components', components.length);
 
 // What the docs need to show Install / Usage on each component page (read by scripts/build_content.py).
@@ -416,12 +348,8 @@ write(
   JSON.stringify(
     {
       version,
-      scope: SCOPE,
-      components: components.map((c) => {
-        const src = fs.readFileSync(path.join(PKGS, c.dir, 'src', 'index.tsx'), 'utf8');
-        const usedIcons = [...new Set([...c.usage.matchAll(/<(Icon[A-Z]\w*)/g)].map((m) => m[1]))];
-        return { dir: c.dir, exports: c.exports.filter((e) => c.usage.includes(e) || e === c.exports[0]), usage: c.usage, icons: usedIcons, iconButton: c.usage.includes('<IconButton') && c.dir !== 'icon-button', bundlesIcons: src.includes(`'${SCOPE}/icons'`) };
-      }),
+      package: PACKAGE,
+      components: components.map((c) => ({ dir: c.dir, exports: c.exports.filter((e) => c.usage.includes(e) || e === c.exports[0]), usage: c.usage, icons: [...new Set([...c.usage.matchAll(/<(Icon[A-Z]\w*)/g)].map((m) => m[1]))], iconButton: c.usage.includes('<IconButton') && c.dir !== 'icon-button' })),
     },
     null,
     2,
@@ -429,119 +357,157 @@ write(
 );
 
 // ---------------------------------------------------------------------------------------------
-// 4. @open-figment/styles (all CSS) and @open-figment/react (everything)
+// 4. package.json, README, LICENSE
 // ---------------------------------------------------------------------------------------------
-const allRoots = [...new Set(components.flatMap((c) => c.classes))];
-const allCss = `${scopedReset(allRoots)}\n\n${cssFor(allRoots).join('\n\n')}\n`;
+const modules = ['', 'react', 'tokens', 'icons', ...components.map((c) => c.dir)];
+const pkgJson = {
+  name: PACKAGE,
+  version,
+  description: `The ${SYSTEM.title} design system for React: ${components.length} components, ${Object.keys(icons).length} icons and design tokens, with one stylesheet or one per component.`,
+  keywords: ['krackedui', SYSTEM.dir, 'design-system', 'react', 'components', 'ui', 'icons', 'tokens', 'css'],
+  homepage: DOCS,
+  bugs: { url: `${REPO}/issues` },
+  repository: { type: 'git', url: `git+${REPO}.git`, directory: `packages/${SYSTEM.dir}` },
+  license: 'MIT',
+  author: rootPkg.author,
+  type: 'module',
+  engines: { node: '>=18' },
+  sideEffects: ['*.css'],
+  main: './dist/index.cjs',
+  module: './dist/index.js',
+  types: './dist/index.d.ts',
+  exports: {
+    ...exportsMap,
+    './styles.css': cssEntry('css/styles.css'),
+    './components.css': cssEntry('css/components.css'),
+    './tokens.css': cssEntry('css/tokens.css'),
+    './base.css': cssEntry('css/base.css'),
+    ...cssMap,
+    './tokens.json': './tokens.json',
+    './svg/*': './svg/*',
+    './fonts/*': './css/fonts/*',
+    './package.json': './package.json',
+  },
+  // Types for subpath imports under TypeScript's legacy "node" resolution, which ignores "exports".
+  typesVersions: {
+    '*': Object.fromEntries([
+      ...modules.filter(Boolean).map((m) => [m, [`dist/${m}/index.d.ts`]]),
+      ...Object.keys(cssMap).map((k) => [k.slice(2), [`css/${k.slice(2, -'/styles.css'.length)}.css.d.ts`]]),
+      ...['styles', 'components', 'tokens', 'base'].map((n) => [`${n}.css`, [`css/${n}.css.d.ts`]]),
+    ]),
+  },
+  files: ['dist', 'css', 'svg', 'tokens.json', 'README.md', 'LICENSE'],
+  peerDependencies: { react: '>=18', 'react-dom': '>=18' },
+  publishConfig: { access: 'public' },
+};
+write(path.join(PKG, 'package.json'), JSON.stringify(pkgJson, null, 2) + '\n');
+write(path.join(PKG, 'LICENSE'), read('LICENSE'));
 {
-  const dir = path.join(PKGS, 'styles');
-  for (const c of components) write(path.join(dir, 'components', `${c.dir}.css`), fs.readFileSync(path.join(PKGS, c.dir, 'styles.css'), 'utf8'));
-  write(path.join(dir, 'index.css'), `/* ${SCOPE}/styles: every Open Figment component's CSS, with the tokens and font. */\n@import url('./tokens.css');\n\n${allCss}`);
-  write(path.join(dir, 'components.css'), `/* ${SCOPE}/styles: every component's CSS, without tokens (load ${SCOPE}/tokens/tokens.css yourself). */\n\n${allCss}`);
-  // tokens.css travels with the fonts so the relative font URLs resolve in this package too.
-  fs.copyFileSync(path.join(PKGS, 'tokens', 'tokens.css'), path.join(dir, 'tokens.css'));
-  fs.cpSync(path.join(PKGS, 'tokens', 'fonts'), path.join(dir, 'fonts'), { recursive: true });
-  packageJson('styles', {
-    name: `${SCOPE}/styles`,
-    description: 'All Open Figment component CSS, for use with or without React: class-based styles, tokens and the Inter font.',
-    keywords: ['css', 'styles'],
-    main: false,
-    exports: { '.': cssEntry('styles', 'index.css'), './index.css': cssEntry('styles', 'index.css'), './components.css': cssEntry('styles', 'components.css'), './tokens.css': cssEntry('styles', 'tokens.css'), './components/*': './components/*', './fonts/*': './fonts/*', './package.json': './package.json' },
-    files: ['index.css', 'components.css', 'tokens.css', '*.css.d.ts', '*.css.d.cts', 'components', 'fonts'],
-  });
-  write(
-    path.join(dir, 'README.md'),
-    `# ${SCOPE}/styles\n\nEvery Open Figment component's CSS in one place, for apps that render the markup themselves (any framework, or plain HTML). The class names and markup for each component are documented at ${DOCS}.\n\n## Install\n\n${install([`${SCOPE}/styles`])}\n\n## Use\n\n\`\`\`ts\nimport '${SCOPE}/styles'; // tokens + font + all components\n// or pick:\nimport '${SCOPE}/styles/tokens.css';\nimport '${SCOPE}/styles/components/button.css';\n\`\`\`\n\n\`\`\`html\n<button class="btn primary">Share</button>\n\`\`\`\n`,
-  );
-  log('styles');
-}
-{
-  const dir = path.join(PKGS, 'react');
-  const lines = [
-    `// Generated by scripts/packages/build.mjs: every Open Figment package in one import.`,
-    `export * from '${SCOPE}/tokens';`,
-    `export * from '${SCOPE}/icons';`,
-    ...components.map((c) => `export * from '${SCOPE}/${c.dir}';`),
-  ];
-  write(path.join(dir, 'src', 'index.ts'), lines.join('\n') + '\n');
-  write(path.join(dir, 'styles.css'), `/* ${SCOPE}/react: tokens, font and every component's CSS. Import once. */\n@import url('./tokens.css');\n\n${allCss}`);
-  fs.copyFileSync(path.join(PKGS, 'tokens', 'tokens.css'), path.join(dir, 'tokens.css'));
-  fs.cpSync(path.join(PKGS, 'tokens', 'fonts'), path.join(dir, 'fonts'), { recursive: true });
-  const deps = { [`${SCOPE}/tokens`]: `^${version}`, [`${SCOPE}/icons`]: `^${version}` };
-  for (const c of components) deps[`${SCOPE}/${c.dir}`] = `^${version}`;
-  packageJson('react', {
-    name: `${SCOPE}/react`,
-    description: `The whole Open Figment design system for React: ${components.length} components, ${Object.keys(icons).length} icons, tokens and one stylesheet.`,
-    keywords: ['react', 'components', 'ui'],
-    deps,
-    peers: { react: '>=18', 'react-dom': '>=18' },
-    exports: jsExports({ './styles.css': cssEntry('react', 'styles.css'), './tokens.css': cssEntry('react', 'tokens.css'), './fonts/*': './fonts/*' }),
-    files: ['dist', 'styles.css', 'tokens.css', '*.css.d.ts', '*.css.d.cts', 'fonts'],
-  });
   const groups = [...new Set(components.map((c) => c.group))];
   write(
-    path.join(dir, 'README.md'),
-    `# ${SCOPE}/react\n\nThe whole [Open Figment design system](${DOCS}) for React: ${components.length} components, ${Object.keys(icons).length} icons and the design tokens, with one stylesheet. Want a single component instead? Every one is also published on its own (\`${SCOPE}/button\`, \`${SCOPE}/select\`, …).\n\n## Install\n\n${install([`${SCOPE}/react`])}\n\nPeer dependencies: \`react\` and \`react-dom\` 18 or newer.\n\n## Use\n\n\`\`\`tsx\nimport '${SCOPE}/react/styles.css'; // once, at the root of your app\nimport { Button, IconButton, IconPlus } from '${SCOPE}/react';\n\nexport function Toolbar() {\n  return (\n    <>\n      <Button variant="primary">Share</Button>\n      <IconButton label="Add"><IconPlus /></IconButton>\n    </>\n  );\n}\n\`\`\`\n\nDark theme: set \`data-theme="dark"\` on \`<html>\`.\n\n## Components\n\n${groups.map((g) => `**${g}:** ` + components.filter((c) => c.group === g).map((c) => `[${c.exports[0]}](${DOCS}/components/${c.dir})`).join(', ')).join('\n\n')}\n\n## License\n\nMIT. Inter is under the SIL Open Font License 1.1.\n`,
+    path.join(PKG, 'README.md'),
+    `# ${PACKAGE}
+
+The [${SYSTEM.title} design system](${DOCS}) for React: ${components.length} components, ${Object.keys(icons).length} icons and the design tokens. One package: import the whole system, or one component at a time.
+
+Part of [KrackedUI](https://www.npmjs.com/org/krackedui): every KrackedUI design system is one package, \`@krackedui/<design-system>\`.
+
+## Install
+
+${install(PACKAGE)}
+
+Peer dependencies: \`react\` and \`react-dom\` 18 or newer. ES modules, CommonJS and TypeScript types.
+
+## Use the whole system
+
+\`\`\`tsx
+import '${PACKAGE}/styles.css'; // once, at the root of your app: tokens, font, every component
+import { Button, IconButton, IconPlus } from '${PACKAGE}/react';
+
+export function Toolbar() {
+  return (
+    <>
+      <Button variant="primary">Share</Button>
+      <IconButton label="Add"><IconPlus /></IconButton>
+    </>
   );
-  log('react');
+}
+\`\`\`
+
+## Use one component
+
+Each component has its own entry point and stylesheet, so you only ship what you use.
+
+\`\`\`tsx
+import '${PACKAGE}/tokens.css'; // once per app
+import '${PACKAGE}/select/styles.css';
+import { Select } from '${PACKAGE}/select';
+\`\`\`
+
+## Entry points
+
+| Import | What you get |
+| --- | --- |
+| \`${PACKAGE}/react\` (or the package root) | Every component, icon and token |
+| \`${PACKAGE}/<component>\` | One component, e.g. \`/button\`, \`/select\`, \`/menu\` |
+| \`${PACKAGE}/icons\` | ${Object.keys(icons).length} icons as React components (\`IconPlus\`, \`<Icon name="plus" />\`) |
+| \`${PACKAGE}/tokens\` | Typed tokens (\`tokens\`, \`cssVar()\`) |
+| \`${PACKAGE}/styles.css\` | Tokens, the Inter font and all component CSS |
+| \`${PACKAGE}/<component>/styles.css\` | One component's CSS (load \`tokens.css\` once too) |
+| \`${PACKAGE}/tokens.css\`, \`/base.css\`, \`/components.css\` | Tokens and font; optional page defaults; all component CSS without tokens |
+| \`${PACKAGE}/tokens.json\`, \`/svg/<name>.svg\` | Tokens as JSON; icons as SVG files |
+
+Dark theme: set \`data-theme="dark"\` on \`<html>\` (or any container).
+
+## Components
+
+${groups.map((g) => `**${g}:** ` + components.filter((c) => c.group === g).map((c) => `[${c.exports[0]}](${DOCS}/components/${c.dir}) (\`/${c.dir}\`)`).join(', ')).join('\n\n')}
+
+## License
+
+MIT. Inter is under the SIL Open Font License 1.1.
+`,
+  );
 }
 
 // ---------------------------------------------------------------------------------------------
-// 5. Compile: ESM + declarations, then CommonJS, into each package's dist/
+// 5. Compile: ESM + declarations with tsc, CommonJS with Rolldown, into dist/<module>/
 // ---------------------------------------------------------------------------------------------
-const jsPkgs = ['tokens', 'icons', ...components.map((c) => c.dir), 'react'];
-fs.rmSync(BUILD, { recursive: true, force: true });
-const tsconfig = (module, out, declaration) => {
-  void module;
-  const p = path.join(BUILD, `tsconfig.${module}.json`);
-  write(
-    p,
-    JSON.stringify(
-      {
-        compilerOptions: {
-          target: 'ES2020',
-          module: 'ESNext',
-          moduleResolution: 'Bundler',
-          jsx: 'react-jsx',
-          lib: ['ES2022', 'DOM', 'DOM.Iterable'],
-          strict: true,
-          skipLibCheck: true,
-          declaration,
-          esModuleInterop: true,
-          verbatimModuleSyntax: false,
-          rootDir: PKGS,
-          outDir: out,
-          types: [],
-          paths: { [`${SCOPE}/*`]: [path.join(PKGS, '*', 'src')] },
-        },
-        files: jsPkgs.map((d) => path.join(PKGS, d, 'src', fs.existsSync(path.join(PKGS, d, 'src', 'index.tsx')) ? 'index.tsx' : 'index.ts')),
-      },
-      null,
-      2,
-    ),
-  );
-  return p;
+const entryOf = (m) => {
+  const dir = m ? path.join(SRC, m) : SRC;
+  return path.join(dir, fs.existsSync(path.join(dir, 'index.tsx')) ? 'index.tsx' : 'index.ts');
 };
-const tsc = path.join(ROOT, 'node_modules', '.bin', 'tsc');
-execFileSync(tsc, ['-p', tsconfig('esm', path.join(BUILD, 'esm'), true)], { stdio: 'inherit' });
+fs.rmSync(BUILD, { recursive: true, force: true });
+write(
+  path.join(BUILD, 'tsconfig.json'),
+  JSON.stringify(
+    {
+      compilerOptions: { target: 'ES2020', module: 'ESNext', moduleResolution: 'Bundler', jsx: 'react-jsx', lib: ['ES2022', 'DOM', 'DOM.Iterable'], strict: true, skipLibCheck: true, declaration: true, esModuleInterop: true, rootDir: SRC, outDir: path.join(BUILD, 'esm'), types: [] },
+      files: modules.map(entryOf),
+    },
+    null,
+    2,
+  ),
+);
+execFileSync(path.join(ROOT, 'node_modules', '.bin', 'tsc'), ['-p', path.join(BUILD, 'tsconfig.json')], { stdio: 'inherit' });
+fs.cpSync(path.join(BUILD, 'esm'), path.join(PKG, 'dist'), { recursive: true });
 const { build: rolldownBuild } = await import(path.join(ROOT, 'node_modules', 'rolldown', 'dist', 'index.mjs'));
-for (const d of jsPkgs) {
-  const dist = path.join(PKGS, d, 'dist');
-  fs.rmSync(dist, { recursive: true, force: true });
-  fs.mkdirSync(dist, { recursive: true });
-  const esm = path.join(BUILD, 'esm', d, 'src');
-  fs.copyFileSync(path.join(esm, 'index.js'), path.join(dist, 'index.js'));
-  const dts = fs.readFileSync(path.join(esm, 'index.d.ts'), 'utf8');
-  fs.writeFileSync(path.join(dist, 'index.d.ts'), dts);
-  fs.writeFileSync(path.join(dist, 'index.d.cts'), dts);
-  // CommonJS from the ESM output; every package import (react, other @open-figment packages) stays external.
+for (const m of modules) {
+  const dir = m ? path.join(PKG, 'dist', m) : path.join(PKG, 'dist');
+  const dts = fs.readFileSync(path.join(dir, 'index.d.ts'), 'utf8');
+  // CommonJS declarations point at the CommonJS siblings.
+  fs.writeFileSync(path.join(dir, 'index.d.cts'), dts.replace(/(from '\.{1,2}\/[\w/-]+\/index)\.js'/g, "$1.cjs'"));
+  // CommonJS from the ESM output: sibling modules and packages stay external, so each module
+  // is its own file and the same code is never duplicated.
   await rolldownBuild({
-    input: path.join(dist, 'index.js'),
-    external: (id) => !id.startsWith('.') && !path.isAbsolute(id),
-    output: { file: path.join(dist, 'index.cjs'), format: 'cjs' },
+    input: path.join(dir, 'index.js'),
+    external: (id, importer) => !!importer,
+    output: { file: path.join(dir, 'index.cjs'), format: 'cjs' },
     logLevel: 'silent',
   });
+  const cjs = path.join(dir, 'index.cjs');
+  fs.writeFileSync(cjs, fs.readFileSync(cjs, 'utf8').replace(/require\("(\.{1,2}\/[\w/-]+\/index)\.js"\)/g, 'require("$1.cjs")'));
 }
 fs.rmSync(BUILD, { recursive: true, force: true });
-log('compiled', jsPkgs.length, 'packages (ESM, CJS, types)');
-log(`version ${version}: ${jsPkgs.length + 1} packages ready in packages/`);
+log(`compiled ${modules.length} modules (ESM, CJS, types)`);
+log(`${PACKAGE}@${version} ready in packages/${SYSTEM.dir}/`);

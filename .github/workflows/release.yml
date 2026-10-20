@@ -1,10 +1,10 @@
 name: Release packages
 
-# Publishes every @open-figment package to npm when a version tag is pushed:
+# Publishes @krackedui/open-figment to npm when a version tag is pushed:
 #   npm run packages:version -- 1.2.0 && npm run packages:build
 #   git commit -am "Release 1.2.0" && git tag v1.2.0 && git push --follow-tags
 # Needs the NPM_TOKEN repository secret (an npm automation token with publish rights to the
-# @open-figment scope). Packages are published with npm provenance.
+# krackedui organisation). Published with npm provenance.
 
 on:
   push:

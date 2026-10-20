@@ -26,7 +26,7 @@ for (const d of dirs) {
   if (pkg.main) {
     const cssEntries = Object.keys(pkg.exports).filter((k) => !/\.json$|\*$/.test(k) && k !== '.');
     try {
-      execFileSync(bin('attw'), [path.join(OUT, info.filename), '--format', 'table-flipped', '--quiet', '--profile', 'node16', ...(cssEntries.length ? ['--entrypoints', '.', ...cssEntries] : ['--entrypoints', '.'])], { stdio: 'pipe' });
+      execFileSync(bin('attw'), [path.join(OUT, info.filename), '--format', 'table-flipped', '--quiet', ...(cssEntries.length ? ['--entrypoints', '.', ...cssEntries] : ['--entrypoints', '.'])], { stdio: 'pipe' });
     } catch (e) {
       problems.push('attw: ' + String(e.stdout || e.message).trim().split('\n').slice(0, 6).join(' '));
     }

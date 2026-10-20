@@ -1,4 +1,4 @@
-// End-to-end install test: installs the packed tarballs (.packages-pack/, from packages:check)
+// End-to-end install test: installs the packed design system (.packages-pack/, from packages:check)
 // into fresh Vite + React apps with npm, pnpm, Yarn 1 and Yarn 4 (Plug'n'Play), builds each app,
 // checks require() and import in Node, then runs it in Chromium and checks styles, the font,
 // the Select menu, keyboard input, the number field and the dark theme.
@@ -12,14 +12,14 @@ import { chromium } from '@playwright/test';
 
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const PACK = path.join(ROOT, '.packages-pack');
-const tarballs = Object.fromEntries(
-  fs.readdirSync(PACK).filter((f) => f.endsWith('.tgz')).map((f) => [`@open-figment/${f.replace(/^open-figment-/, '').replace(/-\d+\.\d+\.\d+.*\.tgz$/, '')}`, path.join(PACK, f)]),
-);
+// The design system's tarball (packages:check packs it).
+const tarball = path.join(PACK, fs.readdirSync(PACK).find((f) => f.startsWith('krackedui-') && f.endsWith('.tgz')));
+const P = '@krackedui/open-figment';
 const MANAGERS = {
-  npm: { install: 'npm install --no-audit --no-fund --loglevel=error', run: 'npx', overrides: 'overrides' },
-  pnpm: { install: 'npx -y pnpm@10 install --reporter=silent', run: 'npx -y pnpm@10 exec', overrides: 'pnpm' },
-  yarn1: { install: 'npx -y yarn@1.22.22 install --silent --non-interactive', run: 'npx -y yarn@1.22.22 run --silent', overrides: 'resolutions' },
-  yarn4: { install: 'npx -y -p @yarnpkg/cli-dist@4 yarn install', run: 'npx -y -p @yarnpkg/cli-dist@4 yarn', overrides: 'resolutions', pnp: true },
+  npm: { install: 'npm install --no-audit --no-fund --loglevel=error', run: 'npx' },
+  pnpm: { install: 'npx -y pnpm@10 install --reporter=silent', run: 'npx -y pnpm@10 exec' },
+  yarn1: { install: 'npx -y yarn@1.22.22 install --silent --non-interactive', run: 'npx -y yarn@1.22.22 run --silent' },
+  yarn4: { install: 'npx -y -p @yarnpkg/cli-dist@4 yarn install', run: 'npx -y -p @yarnpkg/cli-dist@4 yarn', pnp: true },
 };
 const only = process.argv.slice(2);
 const results = [];
@@ -27,15 +27,15 @@ const results = [];
 const MAIN = `
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import '@open-figment/react/styles.css';
-import '@open-figment/button/styles.css';
-import { Button as SingleButton } from '@open-figment/button';
+import '@krackedui/open-figment/styles.css';
+import '@krackedui/open-figment/button/styles.css';
+import { Button as SingleButton } from '@krackedui/open-figment/button';
 import {
   Avatar, Badge, Button, Checkbox, CodeBlock, Dialog, DialogItem, Drawer, FileCard, FileRow, IconButton, LayerRow, Menu, ModeSwitch,
   NumberField, PageRow, PaintRow, Popover, ProductPill, PropertySection, RailItem, Rail, ResourceCard, SearchField, SegmentedControl,
   Select, StarButton, Tab, TabBar, TabHome, TabNew, TextField, Toast, ToolButton, Tooltip, TypeHeader,
   IconPlus, IconFrame, IconRectangle, IconMove, IconCode, IconGrid, IconList, IconFile, IconAssets, IconPen, IconDots, tokens,
-} from '@open-figment/react';
+} from '@krackedui/open-figment/react';
 
 function App() {
   const [sizing, setSizing] = useState<'fixed' | 'hug' | 'fill'>('hug');
@@ -97,11 +97,13 @@ createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictM
 `;
 
 const NODE_SMOKE = `
-const cjs = require('@open-figment/button');
-const all = require('@open-figment/react');
+const cjs = require('@krackedui/open-figment/button');
+const all = require('@krackedui/open-figment/react');
+const root = require('@krackedui/open-figment');
+if (root.Select !== all.Select) throw new Error('package root differs from /react');
 if (typeof cjs.Button !== 'object' && typeof cjs.Button !== 'function') throw new Error('CJS Button missing');
 if (!all.Select || !all.IconPlus || !all.tokens) throw new Error('CJS react bundle incomplete');
-import('@open-figment/select').then((m) => {
+import('@krackedui/open-figment/select').then((m) => {
   if (!m.Select) throw new Error('ESM Select missing');
   const { renderToStaticMarkup } = require('react-dom/server');
   const { createElement } = require('react');
@@ -114,17 +116,14 @@ import('@open-figment/select').then((m) => {
 async function test(pm) {
   const M = MANAGERS[pm];
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `of-${pm}-`));
-  const overrides = Object.fromEntries(Object.entries(tarballs).map(([n, t]) => [n, `file:${t}`]));
   const pkg = {
     name: `of-install-${pm}`,
     private: true,
     type: 'module',
     scripts: { build: 'vite build', preview: 'vite preview --strictPort' },
-    dependencies: { react: '^19.2.0', 'react-dom': '^19.2.0', '@open-figment/react': overrides['@open-figment/react'], '@open-figment/button': overrides['@open-figment/button'], '@open-figment/select': overrides['@open-figment/select'] },
+    dependencies: { react: '^19.2.0', 'react-dom': '^19.2.0', [P]: `file:${tarball}` },
     devDependencies: { vite: '^8.0.0', '@vitejs/plugin-react': '^6.0.0', typescript: '~6.0.2', '@types/react': '^19.2.0', '@types/react-dom': '^19.2.0' },
   };
-  if (M.overrides === 'pnpm') pkg.pnpm = { overrides };
-  else pkg[M.overrides] = overrides;
   fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(pkg, null, 2));
   if (M.pnp) fs.writeFileSync(path.join(dir, '.yarnrc.yml'), 'enableTelemetry: false\nenableGlobalCache: false\n');
   if (pm === 'yarn4') fs.writeFileSync(path.join(dir, 'yarn.lock'), '');

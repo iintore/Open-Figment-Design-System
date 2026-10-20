@@ -4,16 +4,18 @@ Install the whole system or one component at a time, with npm, pnpm or Yarn. Eve
 
 ## With a package manager
 
-### The whole system
-`@open-figment/react` has every component, all 91 icons and the tokens, with one stylesheet.
+Open Figment is published as one package in the KrackedUI organisation: every KrackedUI design system is `@krackedui/<design-system>`.
 
 ```install
-@open-figment/react
+@krackedui/open-figment
 ```
 
+### The whole system
+`/react` (or the package root) has every component, all 91 icons and the tokens; `styles.css` has all of their CSS.
+
 ```tsx
-import '@open-figment/react/styles.css'; // once, at the root of your app
-import { Button, IconButton, IconPlus } from '@open-figment/react';
+import '@krackedui/open-figment/styles.css'; // once, at the root of your app
+import { Button, IconButton, IconPlus } from '@krackedui/open-figment/react';
 
 export function Toolbar() {
   return (
@@ -25,31 +27,30 @@ export function Toolbar() {
 }
 ```
 
-### One component
-Each component is also its own package, with its own stylesheet. Load the tokens once.
-
-```install
-@open-figment/button
-```
+### One component at a time
+Every component has its own entry point and stylesheet, so your app only ships what it imports. Load the tokens once.
 
 ```tsx
-import '@open-figment/tokens/tokens.css'; // once per app
-import '@open-figment/button/styles.css';
-import { Button } from '@open-figment/button';
+import '@krackedui/open-figment/tokens.css'; // once per app
+import '@krackedui/open-figment/button/styles.css';
+import { Button } from '@krackedui/open-figment/button';
 
 <Button variant="primary">Share</Button>
 ```
 
-Every component page lists its package under **Install**.
+Every component page shows its imports under **Install**.
 
-### The packages
-| Package | What's in it |
+### Entry points
+| Import | What you get |
 | --- | --- |
-| `@open-figment/react` | Every component, icon and token, and `styles.css` with all of them |
-| `@open-figment/<component>` | One component and its `styles.css`, e.g. `@open-figment/select` |
-| `@open-figment/icons` | 91 icons as React components (`IconPlus`, `<Icon name="plus" />`) and SVG files |
-| `@open-figment/tokens` | `tokens.css` (variables, light and dark, Inter), `tokens.json`, typed `tokens` |
-| `@open-figment/styles` | All component CSS without React, for any framework or plain HTML |
+| `@krackedui/open-figment/react` | Every component, icon and token (the package root is the same) |
+| `@krackedui/open-figment/<component>` | One component: `/button`, `/select`, `/menu`, `/number-field`… |
+| `@krackedui/open-figment/icons` | 91 icons as React components (`IconPlus`, `<Icon name="plus" />`) |
+| `@krackedui/open-figment/tokens` | Typed tokens (`tokens`, `cssVar()`) |
+| `@krackedui/open-figment/styles.css` | Tokens, the Inter font and all component CSS |
+| `@krackedui/open-figment/<component>/styles.css` | One component's CSS |
+| `@krackedui/open-figment/tokens.css` | Tokens and the Inter font (`base.css`: optional page defaults) |
+| `@krackedui/open-figment/tokens.json`, `/svg/<name>.svg` | Tokens as JSON, icons as SVG files |
 
 ### Dark theme
 Set `data-theme="dark"` on `<html>`, or on any container to theme just that part.
@@ -57,12 +58,12 @@ Set `data-theme="dark"` on `<html>`, or on any container to theme just that part
 ### Frameworks
 - **Vite, Remix, Parcel, webpack:** import the CSS files from JavaScript as shown.
 - **Next.js (App Router):** import the stylesheets in `app/layout.tsx`. Components are marked `'use client'`, so you can use them from server components.
-- **TypeScript:** types are included, including for the CSS imports.
+- **TypeScript:** types are included for every entry point and CSS import, with any `moduleResolution`.
 
 ## In a web page
 
 ### Add the stylesheets
-Without a bundler, load the tokens first, then the component styles. Both are in `@open-figment/styles` (`tokens.css`, `components.css`) and on this site under `ds/`.
+Without a bundler, load the tokens first, then the component styles. Both are in the package (`@krackedui/open-figment/tokens.css` and `/components.css`) and on this site under `ds/`.
 
 ```html
 <link rel="stylesheet" href="tokens.css" />

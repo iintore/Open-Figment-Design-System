@@ -3,15 +3,15 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { renderToStaticMarkup as html } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import * as All from '@open-figment/react';
-import { components } from '../../scripts/packages/manifest.mjs';
+import * as All from '@krackedui/open-figment/react';
+import { PACKAGE, components } from '../../scripts/packages/manifest.mjs';
 import {
   Avatar, Badge, Button, Checkbox, CodeBlock, Dialog, DialogItem, Drawer, FileCard, FileRow, IconButton, LayerRow, Menu, ModeSwitch,
   NumberField, PageRow, PaintRow, Popover, ProductPill, PropertySection, RailItem, ResourceCard, SearchField, SegmentedControl, Select,
   StarButton, Tab, TextField, Toast, ToolButton, Tooltip, TypeHeader, IconPlus, IconFrame, Icon, icons, tokens, evalExpr,
-} from '@open-figment/react';
+} from '@krackedui/open-figment/react';
 
-const PKGS = path.resolve(import.meta.dirname, '..');
+const PKG = path.resolve(import.meta.dirname, '../open-figment');
 const noop = () => {};
 // Class lists of every element in document order (icon internals skipped): the structure the stylesheet targets.
 const classes = (markup: string) => {
@@ -32,17 +32,29 @@ const classes = (markup: string) => {
 };
 
 describe('exports', () => {
-  it('@open-figment/react exports every component, the icons and the tokens', () => {
-    for (const c of components) for (const name of c.exports) expect(All, `${c.dir} → ${name}`).toHaveProperty(name);
+  it('/react (and the package root) export every component, the icons and the tokens', async () => {
+    const root = await import('@krackedui/open-figment');
+    for (const c of components) for (const name of c.exports) {
+      expect(All, `${c.dir} → ${name}`).toHaveProperty(name);
+      expect(root, `root → ${name}`).toHaveProperty(name);
+    }
     expect(Object.keys(icons)).toHaveLength(91);
     expect(tokens.color).toBeTruthy();
   });
-  it('every package resolves through both import and require', () => {
+  it('every entry point resolves through both import and require', async () => {
     const req = createRequire(import.meta.url);
-    for (const d of ['tokens', 'icons', 'react', ...components.map((c) => c.dir)]) {
-      const mod = req(`@open-figment/${d}`);
-      expect(Object.keys(mod).length, d).toBeGreaterThan(0);
+    for (const sub of ['', '/react', '/tokens', '/icons', ...components.map((c) => '/' + c.dir)]) {
+      const viaRequire = req(PACKAGE + sub);
+      const viaImport = await import(PACKAGE + sub);
+      expect(Object.keys(viaRequire).length, 'require ' + sub).toBeGreaterThan(0);
+      expect(Object.keys(viaImport).sort(), 'import ' + sub).toEqual(Object.keys(viaRequire).sort());
     }
+  });
+  it('one component entry point pulls in only what it uses', () => {
+    const js = fs.readFileSync(path.join(PKG, 'dist/button/index.js'), 'utf8');
+    expect(js).not.toMatch(/from '\.\.\//);
+    const select = fs.readFileSync(path.join(PKG, 'dist/select/index.js'), 'utf8');
+    expect([...select.matchAll(/from '(\.\.\/[\w-]+)\/index\.js'/g)].map((m) => m[1]).sort()).toEqual(['../icons', '../menu']);
   });
 });
 
@@ -97,7 +109,7 @@ describe('icons', () => {
     expect(html(<IconPlus title="Add" size={16} />)).toMatch(/width="16".*role="img".*<title>Add<\/title>/);
     expect(html(<Icon name="chevronDown" />)).toContain('viewBox="0 0 8 8"');
   });
-  it('ship as SVG files', () => expect(fs.readdirSync(path.join(PKGS, 'icons/svg'))).toHaveLength(91));
+  it('ship as SVG files', () => expect(fs.readdirSync(path.join(PKG, 'svg'))).toHaveLength(91));
 });
 
 describe('number field arithmetic', () => {
@@ -111,16 +123,16 @@ describe('number field arithmetic', () => {
 });
 
 describe('styles', () => {
-  it.each(components.map((c) => [c.dir, c.classes[0]]))('%s/styles.css styles .%s and ships no docs-only selectors', (dir, cls) => {
-    const css = fs.readFileSync(path.join(PKGS, dir, 'styles.css'), 'utf8');
+  it.each(components.map((c) => [c.dir, c.classes[0]]))('/%s/styles.css styles .%s and ships no docs-only selectors', (dir, cls) => {
+    const css = fs.readFileSync(path.join(PKG, 'css', `${dir}.css`), 'utf8');
     expect(css).toMatch(new RegExp(`(^|\\n)\\.${cls}[\\s.:{,\\[]`));
     expect(css).not.toMatch(/\.is-(hover|pressed|focus|desktop)\b/);
     expect(css).not.toMatch(/(^|\n)(body|html|\*|button)\s*\{/);
   });
   it('tokens.css defines the colour, type and font tokens', () => {
-    const css = fs.readFileSync(path.join(PKGS, 'tokens/tokens.css'), 'utf8');
+    const css = fs.readFileSync(path.join(PKG, 'css/tokens.css'), 'utf8');
     for (const v of ['--color-bg-brand', '--text-body-medium', '--radius']) expect(css).toContain(v);
     expect(css).toContain('[data-theme="dark"]');
-    for (const m of css.matchAll(/url\('([^']+)'\)/g)) expect(fs.existsSync(path.join(PKGS, 'tokens', m[1])), m[1]).toBe(true);
+    for (const m of css.matchAll(/url\('([^']+)'\)/g)) expect(fs.existsSync(path.join(PKG, 'css', m[1])), m[1]).toBe(true);
   });
 });
