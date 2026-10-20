@@ -170,10 +170,9 @@ async function test(pm) {
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
     checks.select = (await st()).split('|')[0];
-    await page.click('#x input');
-    await page.keyboard.press('ControlOrMeta+a');
-    await page.keyboard.type('100/4');
-    await page.keyboard.press('Enter');
+    // fill() replaces the text in one step (typing can race the field's select-on-focus).
+    await page.fill('#x input', '100/4');
+    await page.press('#x input', 'Enter');
     checks.numberField = (await st()).split('|')[1];
     await page.click('[aria-label="Dev Mode"]');
     await page.click('[aria-label="List view"]');
