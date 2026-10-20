@@ -3,8 +3,10 @@ name: Release packages
 # Publishes @krackedui/open-figment to npm when a version tag is pushed:
 #   npm run packages:version -- 1.2.0 && npm run packages:build
 #   git commit -am "Release 1.2.0" && git tag v1.2.0 && git push --follow-tags
-# Needs the NPM_TOKEN repository secret (an npm automation token with publish rights to the
-# krackedui organisation). Published with npm provenance.
+# Uses npm Trusted Publishing: npm trusts this workflow directly (OpenID Connect), so there is no
+# token to store or renew. Set up once on npmjs.com: package Settings → Trusted Publisher →
+# GitHub Actions, repository iintore/Open-Figment-Design-System, workflow release.yml.
+# Published with npm provenance.
 
 on:
   push:
@@ -17,10 +19,10 @@ permissions:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -34,7 +36,7 @@ jobs:
       - run: npm run packages:test
       - run: npm run packages:check
       - run: node scripts/packages/install-test.mjs npm pnpm
+      - name: npm with Trusted Publishing support
+        run: npm install -g npm@^11.5.1
       - name: Publish
-        run: npm publish --workspaces --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --workspaces --access public

@@ -81,9 +81,9 @@ renders), with element defaults scoped to them, so nothing leaks into the rest o
 1. `npm run packages:version -- 1.2.0` and `npm run packages:build`.
 2. Commit, then `git tag v1.2.0 && git push --follow-tags`.
 3. The **Release packages** workflow tests everything again and publishes
-   `@krackedui/open-figment` to npm with provenance. It needs an `NPM_TOKEN` secret with publish
-   rights to the `krackedui` organisation. (From your machine instead: `npm login`, then
-   `npm run release`.)
+   `@krackedui/open-figment` to npm with provenance, using npm Trusted Publishing: no token is
+   stored anywhere. (Set up once on npmjs.com under the package's Settings → Trusted Publisher:
+   GitHub Actions, this repository, `release.yml`.)
 
 ## How the content is made
 
